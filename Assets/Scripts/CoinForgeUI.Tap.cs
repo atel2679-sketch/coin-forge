@@ -56,6 +56,7 @@ public sealed partial class CoinForgeUI
 
     void Tap()
     {
+        if (InTutorial && tutorialStep != 1) return;
         double value = IdleEngine.I.TapValue;
         IdleEngine.I.Tap();
         if (value != lastTapValue)
@@ -80,6 +81,7 @@ public sealed partial class CoinForgeUI
         coinArt.localScale = Vector3.one * 0.91f;
         SetFrame(burstFrames, ref burstFrame, 0);
         SetFrame(sparkleFrames, ref sparkleFrame, 0);
+        OnTutorialTap();
     }
 
     void Update()

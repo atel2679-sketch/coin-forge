@@ -3,6 +3,7 @@ using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 
+[DefaultExecutionOrder(-20)]
 public sealed partial class CoinForgeUI : MonoBehaviour
 {
     [SerializeField] Sprite[] artwork;
@@ -18,7 +19,7 @@ public sealed partial class CoinForgeUI : MonoBehaviour
     int quantity = 1; // zero selects Max
     Dialog dialog;
 
-    enum Dialog { None, Offline, Prestige, Stats }
+    enum Dialog { None, Offline, Prestige, Stats, Help }
 
     void OnEnable()
     {
@@ -28,6 +29,7 @@ public sealed partial class CoinForgeUI : MonoBehaviour
         GameEvents.RewardGranted += OnReward;
         GameEvents.PrestigeDone += OnPrestige;
         if (started) BeginForeground();
+        if (InTutorial) SuppressTutorialAds();
     }
 
     void Start()
@@ -40,6 +42,7 @@ public sealed partial class CoinForgeUI : MonoBehaviour
         BeginForeground();
         Build();
         Reflow();
+        CheckFirstTutorial();
         if (offline != null && offline.PendingAmount > 0)
             OnOffline(offline.PendingAmount, offline.AwaySeconds);
         Refresh();
@@ -52,6 +55,7 @@ public sealed partial class CoinForgeUI : MonoBehaviour
         GameEvents.RewardedReady -= OnAdReady;
         GameEvents.RewardGranted -= OnReward;
         GameEvents.PrestigeDone -= OnPrestige;
+        ReleaseTutorialAds();
         EndForeground();
     }
 
@@ -62,6 +66,7 @@ public sealed partial class CoinForgeUI : MonoBehaviour
         else
         {
             screenW = 0;
+            if (InTutorial) HideTutorialBanner();
             BeginForeground();
         }
     }
@@ -98,6 +103,7 @@ public sealed partial class CoinForgeUI : MonoBehaviour
         refreshAfter = now + 0.1;
         Reflow();
         Refresh();
+        RefreshTutorial();
         if (foreground && now >= nextTimeSave)
         {
             nextTimeSave = now + 30;
@@ -130,7 +136,7 @@ public sealed partial class CoinForgeUI : MonoBehaviour
 
     void ShowAd(RewardType type)
     {
-        if (adInFlight || AdManager.I == null) return;
+        if (InTutorial || adInFlight || AdManager.I == null) return;
         if (type == RewardType.TimeWarp && !CanTimeWarp()) return;
         adInFlight = AdManager.I.ShowRewarded(type);
         RefreshAdControls();
@@ -237,6 +243,7 @@ public sealed partial class CoinForgeUI : MonoBehaviour
 
     void Choose(int count)
     {
+        if (InTutorial) return;
         quantity = count;
         for (int i = 0; i < modes.Length; i++)
         {
@@ -250,23 +257,27 @@ public sealed partial class CoinForgeUI : MonoBehaviour
 
     void Buy(int index)
     {
-        if (quantity == 0) IdleEngine.I.BuyMax(index);
-        else IdleEngine.I.Buy(index, quantity);
+        if (InTutorial && (tutorialStep != 2 || index != 0)) return;
+        var engine = IdleEngine.I;
+        bool bought = quantity == 0 ? engine.BuyMax(index) : engine.Buy(index, quantity);
+        if (InTutorial && bought) SetTutorialStep(3);
     }
 
     void Open(Dialog next)
     {
-        if (dialog == Dialog.Offline && next != Dialog.Offline) return;
+        if (InTutorial || (dialog == Dialog.Offline && next != Dialog.Offline)) return;
         dialog = next;
         modal.gameObject.SetActive(true);
         offlineCard.gameObject.SetActive(next == Dialog.Offline);
         prestigeCard.gameObject.SetActive(next == Dialog.Prestige);
         statsCard.gameObject.SetActive(next == Dialog.Stats);
+        helpCard.gameObject.SetActive(next == Dialog.Help);
         RefreshDialog();
     }
 
     void OpenStats()
     {
+        if (InTutorial) return;
         Open(Dialog.Stats);
         GameEvents.RaiseMilestoneMenu();
     }

@@ -36,6 +36,7 @@ public sealed partial class CoinForgeUI
     readonly Image[] modes = new Image[3];
     readonly Text[] modeLabels = new Text[3];
     readonly Dictionary<Button, Image> disabledFaces = new Dictionary<Button, Image>();
+    ScrollRect upgradeScroll;
     Font font;
     Canvas canvas;
     RectTransform safe, design, stage, shop, modeBar, viewport, list, statsLink, prestigeLink;
@@ -75,19 +76,21 @@ public sealed partial class CoinForgeUI
         BuildStage();
         BuildShop();
         BuildDialogs();
+        BuildTutorial();
     }
 
     void BuildHud()
     {
         var hud = Box(design, "HUD");
         hud.gameObject.AddComponent<Canvas>();
+        hud.gameObject.AddComponent<GraphicRaycaster>();
         Place(hud, 24, 22, 1032, 240);
         Art(hud, "panel_frame.png", true).color = new Color(0.77f, 0.69f, 0.64f);
         Text title = Label(hud, "COIN FORGE", 36, Gold, TextAnchor.MiddleLeft);
-        Place(title.rectTransform, 35, 18, 490, 49);
+        Place(title.rectTransform, 35, 18, 445, 49);
         Place(Art(hud, "coin_icon.png").rectTransform, 35, 82, 92, 92);
         coins = Label(hud, "", 78, Ivory, TextAnchor.MiddleLeft);
-        Place(coins.rectTransform, 140, 62, 530, 100);
+        Place(coins.rectTransform, 140, 62, 365, 100);
         income = Label(hud, "", 42, new Color32(155, 235, 182, 255), TextAnchor.MiddleLeft);
         Place(income.rectTransform, 145, 162, 520, 52);
 
@@ -105,6 +108,7 @@ public sealed partial class CoinForgeUI
         Place(Art(badge, "ic_boost2x.png").rectTransform, 9, 18, 60, 58);
         boostState = Label(badge, "", 35, Gold, TextAnchor.MiddleLeft);
         Place(boostState.rectTransform, 72, 0, 258, 95);
+        helpLink = (RectTransform)DialogButton(hud, "?", null, 0, 0, 138, OpenHelp).transform;
     }
 
     void BuildStage()
@@ -175,7 +179,7 @@ public sealed partial class CoinForgeUI
         Solid(viewport, "Scroll input", new Color(0, 0, 0, 0.12f)).raycastTarget = true;
         viewport.gameObject.AddComponent<RectMask2D>();
         list = Box(viewport, "Building rows");
-        var scroll = viewport.gameObject.AddComponent<ScrollRect>();
+        var scroll = upgradeScroll = viewport.gameObject.AddComponent<ScrollRect>();
         scroll.viewport = viewport;
         scroll.content = list;
         scroll.horizontal = false;
@@ -258,6 +262,7 @@ public sealed partial class CoinForgeUI
         statsTime = Stat(statsCard, "Play time", 342);
         statsTop = Stat(statsCard, "Top building", 458);
         statsClose = DialogButton(statsCard, "Close", GoldButton, 54, 595, 812, CloseDialog);
+        BuildHelp();
         modal.gameObject.SetActive(false);
     }
 
@@ -345,7 +350,7 @@ public sealed partial class CoinForgeUI
         Place(tapHint, 0, stageHeight - 73, 650, 62);
         float adHeight = stackedHeight;
         float railHeight = 58 + 2 * adHeight + 16;
-        Place(adRail, 631, (stageHeight - railHeight) * 0.48f, 388, railHeight);
+        Place(adRail, 644, (stageHeight - railHeight) * 0.48f, 388, railHeight);
         Place((RectTransform)boostAd.transform, 0, 58, 388, adHeight);
         Place((RectTransform)warpAd.transform, 0, 74 + adHeight, 388, adHeight);
 
@@ -362,6 +367,8 @@ public sealed partial class CoinForgeUI
         Place(list, 0, -contentY, 980, rows.Length * (rowHeight + 10) - 10);
         for (int i = 0; i < rows.Length; i++)
             Place(rows[i].Background.rectTransform.parent as RectTransform, 0, i * (rowHeight + 10), 980, rowHeight);
+        LayoutHelp(designHeight);
+        LayoutTutorial();
     }
 
     void LayoutDialogButtons(float stackedHeight)
@@ -466,7 +473,7 @@ public sealed partial class CoinForgeUI
         Image image;
         if (sprite == null)
         {
-            Solid(root, "Gold outline", new Color32(182, 126, 48, 255));
+            Solid(root, "Gold outline", new Color32(182, 126, 48, 255)).raycastTarget = true;
             image = Solid(root, "Secondary face", new Color32(54, 38, 27, 255));
             image.rectTransform.offsetMin = new Vector2(4, 4);
             image.rectTransform.offsetMax = new Vector2(-4, -4);
