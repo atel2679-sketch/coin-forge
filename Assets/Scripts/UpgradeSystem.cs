@@ -1,0 +1,80 @@
+using System;
+using UnityEngine;
+
+[Serializable]
+public class BuildingDef
+{
+    public string name;
+    public double baseCost;
+    public double baseProd;   // coins/sec per unit
+    public double rate = 1.15; // cost growth r
+}
+
+/// <summary>Upgrade inventory: cost math, bulk buy, production totals. Pure data + math, no UI.</summary>
+public class UpgradeSystem
+{
+    public readonly BuildingDef[] Defs;
+    public int[] Owned;
+
+    public UpgradeSystem(BuildingDef[] defs, int[] owned = null)
+    {
+        Defs = defs;
+        Owned = owned != null && owned.Length == defs.Length ? owned : new int[defs.Length];
+    }
+
+    // Cost = Base * r^n
+    public double CostOf(int i) => Defs[i].baseCost * Math.Pow(Defs[i].rate, Owned[i]);
+
+    // Geometric sum for buying k units: Base * r^n * (r^k - 1)/(r - 1)
+    public double CostOf(int i, int k)
+    {
+        double r = Defs[i].rate;
+        return CostOf(i) * (Math.Pow(r, k) - 1) / (r - 1);
+    }
+
+    // Largest k affordable with given coins
+    public int MaxAffordable(int i, double coins)
+    {
+        double r = Defs[i].rate, c = CostOf(i);
+        if (coins < c) return 0;
+        int k = Math.Max(0, (int)Math.Floor(Math.Log(coins * (r - 1) / c + 1, r)));
+        while (k > 0 && CostOf(i, k) > coins) k--;   // guard against floating-point overshoot
+        return k;
+    }
+
+    // Owned * BaseProd * 2^(floor(Owned/25))  -> milestone doubling every 25
+    public double ProdOf(int i) =>
+        Owned[i] * Defs[i].baseProd * Math.Pow(2, Owned[i] / 25);
+
+    public double TotalProd()
+    {
+        double sum = 0;
+        for (int i = 0; i < Defs.Length; i++) sum += ProdOf(i);
+        return sum;
+    }
+
+    /// <returns>coins spent (0 if failed)</returns>
+    public double TryBuy(int i, int k, double coins)
+    {
+        if (k <= 0) return 0;
+        double cost = CostOf(i, k);
+        if (cost > coins) return 0;
+        Owned[i] += k;
+        GameEvents.RaiseBought(i, Owned[i]);
+        return cost;
+    }
+
+    public static BuildingDef[] DefaultDefs() => new[]
+    {
+        new BuildingDef{ name="Coin Press",  baseCost=15,     baseProd=0.1,   rate=1.15 },
+        new BuildingDef{ name="Mini Forge",  baseCost=100,    baseProd=1,     rate=1.15 },
+        new BuildingDef{ name="Smelter",     baseCost=1.1e3,  baseProd=8,     rate=1.14 },
+        new BuildingDef{ name="Foundry",     baseCost=1.2e4,  baseProd=47,    rate=1.13 },
+        new BuildingDef{ name="Mint",        baseCost=1.3e5,  baseProd=260,   rate=1.13 },
+        new BuildingDef{ name="Vault",       baseCost=1.4e6,  baseProd=1.4e3, rate=1.12 },
+        new BuildingDef{ name="Bank",        baseCost=2e7,    baseProd=7.8e3, rate=1.12 },
+        new BuildingDef{ name="Exchange",    baseCost=3.3e8,  baseProd=4.4e4, rate=1.11 },
+        new BuildingDef{ name="Treasury",    baseCost=5.1e9,  baseProd=2.6e5, rate=1.10 },
+        new BuildingDef{ name="Galaxy Mint", baseCost=7.5e10, baseProd=1.6e6, rate=1.10 },
+    };
+}
