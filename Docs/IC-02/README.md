@@ -38,11 +38,13 @@ Aset toko yang diimpor terdiri dari `app_icon_512.png` (512×512) dan `feature_g
 
 Unity 6000.3.27f1 berhasil membangun APK development Android. Play Mode lulus 18 pemeriksaan, termasuk harga dan ketersediaan x1, x10, dan Max, pembelian, Welcome Back dan klaim offline, Statistik, konfirmasi Prestige, serta tampilan dan nilai Time Warp sesuai kondisi siap dan batas 180 detik. Saat rewarded belum siap, tombol Boost nonaktif dengan label “Memuat…” dan Time Warp tersembunyi.
 
-| Tangkapan layar Unity Editor | Resolusi | Kondisi |
+| Tangkapan layar Redmi Note 7 | Resolusi | Kondisi |
 | --- | --- | --- |
-| [16:9](16x9.png) | 1080×1920 | Safe area penuh |
-| [19.5:9](19.5x9.png) | 1080×2340 | Inset notch simulasi 84px |
-| [20:9](20x9.png) | 1080×2400 | Inset punch-hole simulasi 72px |
-| [Welcome Back dengan simulasi banner](welcome-banner-simulated.png) | 1080×2340 | Banner 167px, jarak terukur 44px (16dp pada 440dpi) |
+| [16:9](16x9.png) | 1080×1920 | Override ukuran layar, rewarded sedang dimuat |
+| [19.5:9](19.5x9.png) | 1080×2340 | Ukuran fisik dengan notch dan banner uji aktif |
+| [20:9](20x9.png) | 1080×2400 | Override ukuran layar dengan banner uji aktif |
+| [Welcome Back di atas banner](welcome-banner.png) | 1080×2340 | Banner uji AdMob aktif di bawah popup |
 
-Redmi Note 7 menolak pemasangan APK QA lewat USB dengan `INSTALL_FAILED_USER_RESTRICTED`. Banner AdMob native dan performa 60 FPS/GC saat tap cepat masih menunggu pengukuran di perangkat.
+Pada resolusi fisik, Unity melaporkan safe area dengan inset atas 79px dan AdMob melaporkan tinggi banner 167px. Pada density 440dpi, batas panel menyisakan 44px atau 16dp di atas banner. Klaim lewat tombol Ambil menutup popup dan menambah koin. Time Warp terlihat saat rewarded siap dan ETA melebihi 180 detik, lalu tersembunyi pada skenario dengan pembelian terjangkau.
+
+Pengukuran awal development build pada 1080×2340 mencatat 35,7 FPS saat diam dan 33,3 FPS saat 96 tap dalam delapan detik. P95 waktu frame sekitar 50 ms. Selama kedua sampel tidak tercatat koleksi GC, dan P95 alokasi per frame tetap 218 B. Target 60 FPS belum tercapai pada sampel ini.
