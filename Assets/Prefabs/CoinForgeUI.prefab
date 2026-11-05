@@ -1,0 +1,156 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5146314975780264077
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7873832506134535716}
+  - component: {fileID: 8211235783037216371}
+  - component: {fileID: 5200705066951432491}
+  - component: {fileID: 7046404807000290018}
+  - component: {fileID: 339629729463067980}
+  m_Layer: 0
+  m_Name: CoinForgeUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7873832506134535716
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5146314975780264077}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
+--- !u!223 &8211235783037216371
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5146314975780264077}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!114 &5200705066951432491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5146314975780264077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 1080, y: 1920}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0.5
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
+--- !u!114 &7046404807000290018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5146314975780264077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &339629729463067980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5146314975780264077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09f7601e6a2f74c49b7bf6af5a5c672a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::CoinForgeUI
+  artwork:
+  - {fileID: 21300000, guid: b6b586b0d9f9bb647b581b1349f9735a, type: 3}
+  - {fileID: 21300000, guid: 691433a9563bea644a98db87113b7f3a, type: 3}
+  - {fileID: 21300000, guid: b96fe425b3269034280cefc0aa3ef24c, type: 3}
+  - {fileID: 21300000, guid: 4358879f3aa536c44a03cad3f572f02e, type: 3}
+  - {fileID: 21300000, guid: b300d0638a1b15048aab1b29ed9370ea, type: 3}
+  - {fileID: 21300000, guid: 5bd6d1c3eac639b478c0881740cb6a53, type: 3}
+  - {fileID: 21300000, guid: 80c3f2e9874862343a952922a32feaf3, type: 3}
+  - {fileID: 21300000, guid: 250ffbc1024865247a0fe7bc14378fe6, type: 3}
+  - {fileID: 21300000, guid: 440fb72a785a3754dac48dddb9cc0866, type: 3}
+  - {fileID: 21300000, guid: 2fe6863595630654d85844588cfffc1f, type: 3}
+  - {fileID: 21300000, guid: 660c14bbd3365064795d8aeb5f0fd553, type: 3}
+  - {fileID: 21300000, guid: 6408424c0f45fc144b65eacc599afcde, type: 3}
+  - {fileID: 21300000, guid: 73b962ec7d3b1d948a4178bd56d67270, type: 3}
+  - {fileID: 21300000, guid: 7bda1943109546448944b54a4dec7015, type: 3}
+  - {fileID: 21300000, guid: 68ad9f632f5aa5a4286de38dcff75f31, type: 3}
+  - {fileID: 21300000, guid: 2a7f7eaf7fc96c443b16cc46648139bd, type: 3}
+  - {fileID: 21300000, guid: 22106f3ec454a514b9a90cdd849e11e4, type: 3}
+  - {fileID: 21300000, guid: ce44b7646a6417d4f92450db722e33f6, type: 3}
+  - {fileID: 21300000, guid: 0cfb7d9c1d73d1840ba18857b6774832, type: 3}
+  - {fileID: 21300000, guid: 6a3fb1041096dbe4a9b3556fb32fa76a, type: 3}
+  - {fileID: 21300000, guid: b2c30edde41e0154385a5120d07ee4c8, type: 3}
+  - {fileID: 21300000, guid: 6984bc0bcf204b04ebee7e9865285e49, type: 3}
+  - {fileID: 21300000, guid: fedaf0c61b6f986448d26b79e12f5617, type: 3}
+  - {fileID: 21300000, guid: d04707842da5c2545a38dba55033be85, type: 3}
+  - {fileID: 21300000, guid: e8f0ddc0700691d4fa1925a5c327af17, type: 3}
+  - {fileID: 21300000, guid: 0b4f9c8cb6c376943a9320b63d6461bc, type: 3}
+  - {fileID: 21300000, guid: 756f36a2b7023da47afd181c1ed4bd3c, type: 3}
+  - {fileID: 21300000, guid: 8ec4c085cf622f646b7dfdde53409bc6, type: 3}
+  - {fileID: 21300000, guid: 148ed92e66b85aa48ae3616ed53f2c65, type: 3}
+  - {fileID: 21300000, guid: 80f3c4b66dbc2bc48910ac590827691d, type: 3}
+  - {fileID: 21300000, guid: f733e24bea48bc94780a3fc87c5fb9f0, type: 3}
+  - {fileID: 21300000, guid: 434c5a564332a85488b993d3b9141869, type: 3}
+  - {fileID: 21300000, guid: af70eb302a167e341b433210d192c8b7, type: 3}
+  - {fileID: 21300000, guid: 3a5f07b02f3907146b7f294c9ab9e8a3, type: 3}
+  - {fileID: 21300000, guid: 0ee23b6ce3ff17444bde5ed37bbf7b3c, type: 3}
+  - {fileID: 21300000, guid: a1d24c24b72c5044789ce18202422848, type: 3}
+  - {fileID: 21300000, guid: 0d1db98be8164634694510929e5c6755, type: 3}
+  - {fileID: 21300000, guid: 1f4e34f930004274aab2bde5f202030a, type: 3}
+  - {fileID: 21300000, guid: e3fd0a0489737c44c904201a8160da03, type: 3}

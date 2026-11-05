@@ -1,0 +1,316 @@
+using System;
+using System.Globalization;
+using UnityEngine;
+using UnityEngine.UI;
+
+public sealed partial class CoinForgeUI : MonoBehaviour
+{
+    [SerializeField] Sprite[] artwork;
+    const string PlayTimeKey = "ic02_foreground_seconds";
+    const int MilestoneStep = 25;
+
+    OfflineEarnings offline;
+    double refreshAfter, offlineAmount, awaySeconds;
+    double savedPlayTime, foregroundSince, nextTimeSave;
+    bool started, foreground, adInFlight;
+    double shownCoins = -1, shownIncome = -1, shownWarp = -1;
+    int shownGems = -1;
+    int quantity = 1; // zero selects Max
+    Dialog dialog;
+
+    enum Dialog { None, Offline, Prestige, Stats }
+
+    void OnEnable()
+    {
+        GameEvents.CoinsChanged += OnCoins;
+        GameEvents.OfflineEarned += OnOffline;
+        GameEvents.RewardedReady += OnAdReady;
+        GameEvents.RewardGranted += OnReward;
+        GameEvents.PrestigeDone += OnPrestige;
+        if (started) BeginForeground();
+    }
+
+    void Start()
+    {
+        Application.targetFrameRate = 60;
+        offline = FindFirstObjectByType<OfflineEarnings>();
+        double.TryParse(PlayerPrefs.GetString(PlayTimeKey), NumberStyles.Float,
+            CultureInfo.InvariantCulture, out savedPlayTime);
+        started = true;
+        BeginForeground();
+        Build();
+        Reflow();
+        if (offline != null && offline.PendingAmount > 0)
+            OnOffline(offline.PendingAmount, offline.AwaySeconds);
+        Refresh();
+    }
+
+    void OnDisable()
+    {
+        GameEvents.CoinsChanged -= OnCoins;
+        GameEvents.OfflineEarned -= OnOffline;
+        GameEvents.RewardedReady -= OnAdReady;
+        GameEvents.RewardGranted -= OnReward;
+        GameEvents.PrestigeDone -= OnPrestige;
+        EndForeground();
+    }
+
+    void OnApplicationPause(bool paused)
+    {
+        if (!started) return;
+        if (paused) EndForeground();
+        else
+        {
+            screenW = 0;
+            BeginForeground();
+        }
+    }
+
+    void OnApplicationQuit() => EndForeground();
+
+    void BeginForeground()
+    {
+        if (foreground) return;
+        foregroundSince = Time.realtimeSinceStartupAsDouble;
+        nextTimeSave = foregroundSince + 30;
+        foreground = true;
+    }
+
+    double PlayTime => savedPlayTime + (foreground ? Time.realtimeSinceStartupAsDouble - foregroundSince : 0);
+
+    void EndForeground()
+    {
+        if (!foreground) return;
+        savedPlayTime = PlayTime;
+        foreground = false;
+        SavePlayTime();
+        PlayerPrefs.Save();
+    }
+
+    void SavePlayTime() => PlayerPrefs.SetString(PlayTimeKey, PlayTime.ToString("R", CultureInfo.InvariantCulture));
+
+    void OnCoins(double _)
+    {
+        if (safe == null) return;
+        // Immediate purchase events can arrive between the core's 10 Hz heartbeats.
+        double now = Time.realtimeSinceStartupAsDouble;
+        if (now < refreshAfter) return;
+        refreshAfter = now + 0.1;
+        Reflow();
+        Refresh();
+        if (foreground && now >= nextTimeSave)
+        {
+            nextTimeSave = now + 30;
+            SavePlayTime();
+        }
+    }
+
+    void OnOffline(double amount, double seconds)
+    {
+        offlineAmount = amount;
+        awaySeconds = seconds;
+        if (modal != null) Open(Dialog.Offline);
+    }
+
+    void OnAdReady(bool ready)
+    {
+        if (!ready) adInFlight = false;
+        if (safe != null) RefreshAdControls();
+    }
+
+    void OnReward(RewardType type)
+    {
+        if (type == RewardType.OfflineDouble && dialog == Dialog.Offline) CloseDialog();
+    }
+
+    void OnPrestige()
+    {
+        if (dialog == Dialog.Prestige) CloseDialog();
+    }
+
+    void ShowAd(RewardType type)
+    {
+        if (adInFlight || AdManager.I == null) return;
+        if (type == RewardType.TimeWarp && !CanTimeWarp()) return;
+        adInFlight = AdManager.I.ShowRewarded(type);
+        RefreshAdControls();
+    }
+
+    bool CanTimeWarp() => AdManager.I != null && AdManager.I.TimeWarpReady
+        && IdleEngine.I.SecondsToNextPurchase() > 180;
+
+    void RefreshAdControls()
+    {
+        bool ready = !adInFlight && AdManager.I != null && AdManager.I.RewardedReady;
+        boostAd.interactable = ready;
+        warpAd.interactable = ready;
+        offlineAd.interactable = ready;
+        offlineCollect.interactable = !adInFlight;
+    }
+
+    void Refresh()
+    {
+        var engine = IdleEngine.I;
+        if (shownCoins != engine.Coins)
+        {
+            shownCoins = engine.Coins;
+            Set(coins, BigNum.Format(shownCoins));
+        }
+        double rate = engine.IncomePerSec;
+        if (shownIncome != rate)
+        {
+            shownIncome = rate;
+            Set(income, "+" + BigNum.Format(rate) + " / detik");
+        }
+        if (shownGems != engine.Gems)
+        {
+            shownGems = engine.Gems;
+            Set(gems, BigNum.Format(shownGems));
+        }
+        int boostSeconds = Mathf.CeilToInt((float)engine.BoostRemaining);
+        if (boostSeconds != shownBoostSeconds)
+        {
+            shownBoostSeconds = boostSeconds;
+            Set(boostState, boostSeconds > 0 ? "2x aktif  •  " + BigNum.Time(boostSeconds) : "2x nonaktif");
+            boostBadge.alpha = boostSeconds > 0 ? 1 : 0.58f;
+        }
+
+        RefreshAdControls();
+        Set(boostAdStatus, boostAd.interactable ? "Tonton iklan" : "Memuat…");
+        bool warp = CanTimeWarp();
+        warpAd.gameObject.SetActive(warp);
+        if (warp)
+        {
+            double reward = engine.BaseIncomePerSec * engine.timeWarpHours * 3600;
+            if (shownWarp != reward)
+            {
+                shownWarp = reward;
+                Set(warpAdStatus, "+" + BigNum.Format(reward) + " koin");
+            }
+        }
+
+        for (int i = 0; i < rows.Length; i++) RefreshRow(i, engine);
+        RefreshDialog();
+    }
+
+    void RefreshRow(int index, IdleEngine engine)
+    {
+        var upgrades = engine.Upgrades;
+        var def = upgrades.Defs[index];
+        int owned = upgrades.Owned[index];
+        bool known = owned > 0 || engine.Coins >= def.baseCost * 0.5;
+        int count = quantity == 0 ? upgrades.MaxAffordable(index, engine.Coins) : quantity;
+        double cost = upgrades.CostOf(index, Mathf.Max(1, count));
+        bool affordable = count > 0 && cost <= engine.Coins;
+        Row row = rows[index];
+        if (row.Known != known)
+        {
+            row.Known = known;
+            row.Icon.enabled = known;
+            row.Locked.enabled = !known;
+            Set(row.Name, known ? def.name : "???");
+        }
+        if (row.Owned != owned)
+        {
+            row.Owned = owned;
+            int progress = owned % MilestoneStep;
+            row.Progress.anchorMax = new Vector2((float)progress / MilestoneStep, 1);
+            Set(row.Milestone, BigNum.Format(progress) + "/" + BigNum.Format(MilestoneStep));
+            Set(row.Count, "x" + BigNum.Format(owned));
+        }
+        double production = upgrades.ProdOf(index) * engine.PrestigeMult * (shownBoostSeconds > 0 ? 2 : 1);
+        if (row.Production != production)
+        {
+            row.Production = production;
+            Set(row.Rate, "+" + BigNum.Format(production) + " / detik");
+        }
+        if (row.PriceValue != cost || row.BuyCount != count)
+        {
+            row.PriceValue = cost;
+            row.BuyCount = count;
+            Set(row.Price, BigNum.Format(cost));
+            Set(row.BuyLabel, count == 0 ? "Min. x1" : "Beli x" + BigNum.Format(count));
+        }
+        row.Buy.interactable = affordable;
+        row.Background.color = affordable ? ShopRow : MutedRow;
+        row.BuyGold.enabled = affordable;
+        row.BuyGray.enabled = !affordable;
+    }
+
+    void Choose(int count)
+    {
+        quantity = count;
+        for (int i = 0; i < modes.Length; i++) modes[i].enabled = quantity == ModeCounts[i];
+        Refresh();
+    }
+
+    void Buy(int index)
+    {
+        if (quantity == 0) IdleEngine.I.BuyMax(index);
+        else IdleEngine.I.Buy(index, quantity);
+    }
+
+    void Open(Dialog next)
+    {
+        if (dialog == Dialog.Offline && next != Dialog.Offline) return;
+        dialog = next;
+        modal.gameObject.SetActive(true);
+        offlineCard.gameObject.SetActive(next == Dialog.Offline);
+        prestigeCard.gameObject.SetActive(next == Dialog.Prestige);
+        statsCard.gameObject.SetActive(next == Dialog.Stats);
+        RefreshDialog();
+    }
+
+    void OpenStats()
+    {
+        Open(Dialog.Stats);
+        GameEvents.RaiseMilestoneMenu();
+    }
+
+    void CloseDialog()
+    {
+        dialog = Dialog.None;
+        modal.gameObject.SetActive(false);
+    }
+
+    void Collect()
+    {
+        if (adInFlight) return;
+        offline.Collect();
+        CloseDialog();
+    }
+
+    void RefreshDialog()
+    {
+        var engine = IdleEngine.I;
+        switch (dialog)
+        {
+            case Dialog.Offline:
+                Set(offlineTime, "Pergi selama " + BigNum.Time(awaySeconds));
+                Set(offlineCoins, "+" + BigNum.Format(offlineAmount) + " koin");
+                Set(offlineAdText, "Tonton iklan: x2  •  +" + BigNum.Format(offlineAmount * 2) + " koin");
+                Set(offlineAdStatus, offlineAd.interactable ? "Hadiah setelah iklan" : "Memuat…");
+                break;
+            case Dialog.Prestige:
+                int pending = engine.PendingGems();
+                Set(prestigeGems, BigNum.Format(engine.Gems) + "  →  " + BigNum.Format(pending) + " Gems");
+                prestigeConfirm.interactable = pending > engine.Gems;
+                break;
+            case Dialog.Stats:
+                var upgrades = engine.Upgrades;
+                int top = 0;
+                for (int i = 1; i < upgrades.Owned.Length; i++)
+                    if (upgrades.Owned[i] > upgrades.Owned[top]) top = i;
+                Set(statsLifetime, BigNum.Format(engine.Lifetime) + " koin");
+                Set(statsTime, BigNum.Time(PlayTime));
+                Set(statsTop, upgrades.Owned[top] == 0 ? "Belum ada"
+                    : upgrades.Defs[top].name + "  x" + BigNum.Format(upgrades.Owned[top]));
+                break;
+        }
+    }
+
+    static void Set(Text target, string value)
+    {
+        if (target.text != value) target.text = value;
+    }
+}
