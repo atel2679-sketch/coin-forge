@@ -117,16 +117,16 @@ public sealed partial class CoinForgeUI
         tap.targetGraphic = hit;
         tap.transition = Selectable.Transition.None;
         tap.onClick.AddListener(Tap);
-        tapHint = Label(stage, "KETUK UNTUK MENEMPA", 39, Gold).rectTransform;
+        tapHint = Label(stage, "TAP TO FORGE", 39, Gold).rectTransform;
         var shadow = tapHint.gameObject.AddComponent<Shadow>();
         shadow.effectDistance = new Vector2(0, -3);
         shadow.effectColor = Ink;
 
         adRail = Box(stage, "Rewards rail");
-        Place(Label(adRail, "HADIAH IKLAN", 35, Muted).rectTransform, 0, 0, 388, 58);
-        boostAd = BuildAd(adRail, "Boost ad", "ic_boost2x.png", "2x Boost 2 jam", out boostAdStatus,
+        Place(Label(adRail, "AD REWARDS", 35, Muted).rectTransform, 0, 0, 388, 58);
+        boostAd = BuildAd(adRail, "Boost ad", "ic_boost2x.png", "2x Boost for 2h", out boostAdStatus,
             () => ShowAd(RewardType.Boost2x));
-        warpAd = BuildAd(adRail, "Time Warp ad", "ic_timewarp.png", "Time Warp +4 jam", out warpAdStatus,
+        warpAd = BuildAd(adRail, "Time Warp ad", "ic_timewarp.png", "Time Warp +4h", out warpAdStatus,
             () => ShowAd(RewardType.TimeWarp));
         BuildTapEffects(stage, coin.rectTransform);
     }
@@ -146,9 +146,9 @@ public sealed partial class CoinForgeUI
     {
         shop = Box(design, "Upgrade shop");
         Art(shop, "panel_frame.png", true);
-        var heading = Label(shop, "UPGRADE", 61, Ivory, TextAnchor.MiddleLeft);
+        var heading = Label(shop, "UPGRADES", 61, Ivory, TextAnchor.MiddleLeft);
         Place(heading.rectTransform, 40, 22, 445, 118);
-        statsLink = FeatureButton(shop, "Statistik", "ic_milestone.png", OpenStats);
+        statsLink = FeatureButton(shop, "Stats", "ic_milestone.png", OpenStats);
         prestigeLink = FeatureButton(shop, "Prestige", "ic_prestige.png", () => Open(Dialog.Prestige));
 
         modeBar = Box(shop, "Purchase quantity");
@@ -230,7 +230,7 @@ public sealed partial class CoinForgeUI
         modal = Box(design, "Modal layer");
         Solid(modal, "Modal shield", new Color(0.075f, 0.045f, 0.03f, 0.88f)).raycastTarget = true;
 
-        offlineCard = Card("Welcome Back", "ic_offline.png", "SELAMAT DATANG KEMBALI");
+        offlineCard = Card("Welcome Back", "ic_offline.png", "WELCOME BACK");
         offlineTime = DialogLabel(offlineCard, "", 42, 224, 62, Muted);
         offlineCoins = DialogLabel(offlineCard, "", 72, 300, 92, Gold);
         offlineAd = ActionButton(offlineCard, "Double offline coins", GreenButton, () => ShowAd(RewardType.OfflineDouble));
@@ -240,20 +240,20 @@ public sealed partial class CoinForgeUI
         Area(offlineAdText.rectTransform, 0.15f, 0.06f, 0.96f, 0.53f);
         offlineAdStatus = Label(offlineAd.transform, "", 37, Ink);
         Area(offlineAdStatus.rectTransform, 0.15f, 0.52f, 0.96f, 0.90f);
-        offlineCollect = DialogButton(offlineCard, "Ambil", GrayButton, 54, 580, 812, Collect);
+        offlineCollect = DialogButton(offlineCard, "Collect", GrayButton, 54, 580, 812, Collect);
 
         prestigeCard = Card("Prestige", "ic_prestige.png", "PRESTIGE");
         prestigeGems = DialogLabel(prestigeCard, "", 64, 227, 95, Gold);
-        DialogLabel(prestigeCard, "Prestige akan mereset koin dan semua gedung. Gems meningkatkan produksi berikutnya.",
+        DialogLabel(prestigeCard, "Prestige resets your coins and buildings. Gems increase future production.",
             44, 332, 180, Ivory);
-        prestigeCancel = DialogButton(prestigeCard, "Batal", GrayButton, 54, 559, 394, CloseDialog);
+        prestigeCancel = DialogButton(prestigeCard, "Cancel", GrayButton, 54, 559, 394, CloseDialog);
         prestigeConfirm = DialogButton(prestigeCard, "Prestige", GoldButton, 472, 559, 394, () => IdleEngine.I.Prestige());
 
-        statsCard = Card("Milestone and stats", "ic_milestone.png", "MILESTONE / STATISTIK");
-        statsLifetime = Stat(statsCard, "Total koin sepanjang permainan", 226);
-        statsTime = Stat(statsCard, "Waktu main", 342);
-        statsTop = Stat(statsCard, "Gedung terbanyak", 458);
-        statsClose = DialogButton(statsCard, "Tutup", GoldButton, 54, 595, 812, CloseDialog);
+        statsCard = Card("Milestone and stats", "ic_milestone.png", "MILESTONES / STATS");
+        statsLifetime = Stat(statsCard, "Lifetime coins", 226);
+        statsTime = Stat(statsCard, "Play time", 342);
+        statsTop = Stat(statsCard, "Top building", 458);
+        statsClose = DialogButton(statsCard, "Close", GoldButton, 54, 595, 812, CloseDialog);
         modal.gameObject.SetActive(false);
     }
 

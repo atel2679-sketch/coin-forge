@@ -160,7 +160,7 @@ public sealed partial class CoinForgeUI : MonoBehaviour
         if (shownIncome != rate)
         {
             shownIncome = rate;
-            Set(income, "+" + BigNum.Format(rate) + " / detik");
+            Set(income, "+" + BigNum.Format(rate) + " / sec");
         }
         if (shownGems != engine.Gems)
         {
@@ -171,12 +171,12 @@ public sealed partial class CoinForgeUI : MonoBehaviour
         if (boostSeconds != shownBoostSeconds)
         {
             shownBoostSeconds = boostSeconds;
-            Set(boostState, boostSeconds > 0 ? "2x aktif  •  " + BigNum.Time(boostSeconds) : "2x nonaktif");
+            Set(boostState, boostSeconds > 0 ? "2x active  •  " + BigNum.Time(boostSeconds) : "2x inactive");
             boostBadge.alpha = boostSeconds > 0 ? 1 : 0.58f;
         }
 
         RefreshAdControls();
-        Set(boostAdStatus, boostAd.interactable ? "Tonton iklan" : "Memuat…");
+        Set(boostAdStatus, boostAd.interactable ? "Watch ad" : "Loading…");
         bool warp = CanTimeWarp();
         warpAd.gameObject.SetActive(warp);
         if (warp)
@@ -185,7 +185,7 @@ public sealed partial class CoinForgeUI : MonoBehaviour
             if (shownWarp != reward)
             {
                 shownWarp = reward;
-                Set(warpAdStatus, "+" + BigNum.Format(reward) + " koin");
+                Set(warpAdStatus, "+" + BigNum.Format(reward) + " coins");
             }
         }
 
@@ -222,14 +222,14 @@ public sealed partial class CoinForgeUI : MonoBehaviour
         if (row.Production != production)
         {
             row.Production = production;
-            Set(row.Rate, "+" + BigNum.Format(production) + " / detik");
+            Set(row.Rate, "+" + BigNum.Format(production) + " / sec");
         }
         if (row.PriceValue != cost || row.BuyCount != count)
         {
             row.PriceValue = cost;
             row.BuyCount = count;
             Set(row.Price, BigNum.Format(cost));
-            Set(row.BuyLabel, count == 0 ? "Min. x1" : "Beli x" + BigNum.Format(count));
+            Set(row.BuyLabel, count == 0 ? "Min. x1" : "Buy x" + BigNum.Format(count));
         }
         row.Buy.interactable = affordable;
         row.Background.color = affordable ? ShopRow : MutedRow;
@@ -286,10 +286,10 @@ public sealed partial class CoinForgeUI : MonoBehaviour
         switch (dialog)
         {
             case Dialog.Offline:
-                Set(offlineTime, "Pergi selama " + BigNum.Time(awaySeconds));
-                Set(offlineCoins, "+" + BigNum.Format(offlineAmount) + " koin");
-                Set(offlineAdText, "Tonton iklan: x2  •  +" + BigNum.Format(offlineAmount * 2) + " koin");
-                Set(offlineAdStatus, offlineAd.interactable ? "Hadiah setelah iklan" : "Memuat…");
+                Set(offlineTime, "Away for " + BigNum.Time(awaySeconds));
+                Set(offlineCoins, "+" + BigNum.Format(offlineAmount) + " coins");
+                Set(offlineAdText, "Watch ad: x2  •  +" + BigNum.Format(offlineAmount * 2) + " coins");
+                Set(offlineAdStatus, offlineAd.interactable ? "Reward after the ad" : "Loading…");
                 break;
             case Dialog.Prestige:
                 int pending = engine.PendingGems();
@@ -301,9 +301,9 @@ public sealed partial class CoinForgeUI : MonoBehaviour
                 int top = 0;
                 for (int i = 1; i < upgrades.Owned.Length; i++)
                     if (upgrades.Owned[i] > upgrades.Owned[top]) top = i;
-                Set(statsLifetime, BigNum.Format(engine.Lifetime) + " koin");
+                Set(statsLifetime, BigNum.Format(engine.Lifetime) + " coins");
                 Set(statsTime, BigNum.Time(PlayTime));
-                Set(statsTop, upgrades.Owned[top] == 0 ? "Belum ada"
+                Set(statsTop, upgrades.Owned[top] == 0 ? "None yet"
                     : upgrades.Defs[top].name + "  x" + BigNum.Format(upgrades.Owned[top]));
                 break;
         }
