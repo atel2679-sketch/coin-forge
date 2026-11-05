@@ -8,6 +8,7 @@ public sealed partial class CoinForgeUI
 {
     const float Width = 1080;
     const float BannerReferencePx = 167;
+    const float ButtonBorderY = 40;
     const string GoldButton = "btn_gold.png";
     const string GrayButton = "btn_gray.png";
     const string GreenButton = "btn_green.png";
@@ -21,7 +22,7 @@ public sealed partial class CoinForgeUI
 
     sealed class Row
     {
-        public Image Background, Icon, Locked, BuyGold, BuyGray;
+        public Image Background, Icon, Locked;
         public Button Buy;
         public Text Name, Count, Rate, Price, BuyLabel, Milestone;
         public RectTransform Progress;
@@ -33,6 +34,8 @@ public sealed partial class CoinForgeUI
     readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
     readonly List<(Text label, int size)> labels = new List<(Text, int)>();
     readonly Image[] modes = new Image[3];
+    readonly Text[] modeLabels = new Text[3];
+    readonly Dictionary<Button, Image> disabledFaces = new Dictionary<Button, Image>();
     Font font;
     Canvas canvas;
     RectTransform safe, design, stage, shop, modeBar, viewport, list, statsLink, prestigeLink;
@@ -124,7 +127,7 @@ public sealed partial class CoinForgeUI
 
         adRail = Box(stage, "Rewards rail");
         Place(Label(adRail, "AD REWARDS", 35, Muted).rectTransform, 0, 0, 388, 58);
-        boostAd = BuildAd(adRail, "Boost ad", "ic_boost2x.png", "2x Boost for 2h", out boostAdStatus,
+        boostAd = BuildAd(adRail, "Boost ad", "ic_boost2x.png", "2x Boost · 2h", out boostAdStatus,
             () => ShowAd(RewardType.Boost2x));
         warpAd = BuildAd(adRail, "Time Warp ad", "ic_timewarp.png", "Time Warp +4h", out warpAdStatus,
             () => ShowAd(RewardType.TimeWarp));
@@ -133,12 +136,15 @@ public sealed partial class CoinForgeUI
 
     Button BuildAd(Transform parent, string name, string icon, string title, out Text status, UnityAction action)
     {
-        Button button = ActionButton(parent, name, GreenButton, action);
+        Button button = ActionButton(parent, name, GreenButton, action, true);
         var root = (RectTransform)button.transform;
-        Area(Art(root, icon).rectTransform, 0.045f, 0.50f, 0.194f, 0.92f);
-        Area(Label(root, title, 40, Ink).rectTransform, 0.05f, 0.07f, 0.96f, 0.51f);
-        status = Label(root, "", 34, Ink, TextAnchor.MiddleLeft);
-        Area(status.rectTransform, 0.21f, 0.51f, 0.96f, 0.90f);
+        var badge = Art(root, icon).rectTransform;
+        badge.anchorMin = badge.anchorMax = new Vector2(0, 0.5f);
+        badge.anchoredPosition = new Vector2(52, 0);
+        badge.sizeDelta = new Vector2(54, 64);
+        ButtonContent(Label(root, title, 43, Ink, TextAnchor.MiddleLeft).rectTransform, 92, 13, 0, 0.53f);
+        status = Label(root, "", 36, Ink, TextAnchor.MiddleLeft);
+        ButtonContent(status.rectTransform, 92, 13, 0.53f, 1);
         return button;
     }
 
@@ -156,11 +162,12 @@ public sealed partial class CoinForgeUI
         {
             int count = ModeCounts[i];
             string name = count == 0 ? "Max" : "x" + BigNum.Format(count);
-            Button mode = ActionButton(modeBar, name, GrayButton, () => Choose(count));
+            Button mode = ActionButton(modeBar, name, null, () => Choose(count));
             var rect = (RectTransform)mode.transform;
             modes[i] = Art(rect, GoldButton, true);
             modes[i].enabled = count == quantity;
-            Label(rect, name, 43, Ink);
+            modeLabels[i] = Label(rect, name, 43, count == quantity ? Ink : Ivory);
+            ButtonContent(modeLabels[i].rectTransform, 16, 16);
             Place(rect, i * 329, 0, 315, 120);
         }
 
@@ -186,9 +193,9 @@ public sealed partial class CoinForgeUI
 
     RectTransform FeatureButton(Transform parent, string name, string icon, UnityAction action)
     {
-        var root = (RectTransform)ActionButton(parent, name, GrayButton, action).transform;
+        var root = (RectTransform)ActionButton(parent, name, null, action).transform;
         Area(Art(root, icon).rectTransform, 0.04f, 0.16f, 0.32f, 0.84f);
-        Area(Label(root, name, 36, Ink, TextAnchor.MiddleLeft).rectTransform, 0.32f, 0.08f, 0.97f, 0.88f);
+        Area(Label(root, name, 36, Ivory, TextAnchor.MiddleLeft).rectTransform, 0.32f, 0.08f, 0.97f, 0.88f);
         return root;
     }
 
@@ -213,15 +220,13 @@ public sealed partial class CoinForgeUI
         Area(track.rectTransform, 0.152f, 0.80f, 0.678f, 0.875f);
         row.Progress = Solid(track.transform, "Milestone fill", Gold).rectTransform;
 
-        row.Buy = ActionButton(root, "Buy", null, () => Buy(index));
+        row.Buy = ActionButton(root, "Buy", GoldButton, () => Buy(index), true);
         var buy = (RectTransform)row.Buy.transform;
         Area(buy, 0.699f, 0.084f, 0.988f, 0.916f);
-        row.BuyGold = Art(buy, GoldButton, true);
-        row.BuyGray = Art(buy, GrayButton, true);
-        row.Price = Label(buy, "", 50, Ink);
-        row.BuyLabel = Label(buy, "", 34, Ink);
-        Area(row.Price.rectTransform, 0.06f, 0.06f, 0.94f, 0.56f);
-        Area(row.BuyLabel.rectTransform, 0.06f, 0.54f, 0.94f, 0.91f);
+        row.Price = Label(buy, "", 51, Ink);
+        row.BuyLabel = Label(buy, "", 36, Ink);
+        ButtonContent(row.Price.rectTransform, 14, 14, 0, 0.55f);
+        ButtonContent(row.BuyLabel.rectTransform, 14, 14, 0.55f, 1);
         return row;
     }
 
@@ -233,21 +238,20 @@ public sealed partial class CoinForgeUI
         offlineCard = Card("Welcome Back", "ic_offline.png", "WELCOME BACK");
         offlineTime = DialogLabel(offlineCard, "", 42, 224, 62, Muted);
         offlineCoins = DialogLabel(offlineCard, "", 72, 300, 92, Gold);
-        offlineAd = ActionButton(offlineCard, "Double offline coins", GreenButton, () => ShowAd(RewardType.OfflineDouble));
-        Place((RectTransform)offlineAd.transform, 54, 426, 812, 138);
-        Area(Art(offlineAd.transform, "ic_ad_badge.png").rectTransform, 0.03f, 0.18f, 0.14f, 0.78f);
+        offlineAd = ActionButton(offlineCard, "Double offline coins", GreenButton, () => ShowAd(RewardType.OfflineDouble), true);
+        Area(Art(offlineAd.transform, "ic_ad_badge.png").rectTransform, 0.035f, 0.27f, 0.14f, 0.73f);
         offlineAdText = Label(offlineAd.transform, "", 43, Ink);
-        Area(offlineAdText.rectTransform, 0.15f, 0.06f, 0.96f, 0.53f);
+        ButtonContent(offlineAdText.rectTransform, 115, 26, 0, 0.53f);
         offlineAdStatus = Label(offlineAd.transform, "", 37, Ink);
-        Area(offlineAdStatus.rectTransform, 0.15f, 0.52f, 0.96f, 0.90f);
-        offlineCollect = DialogButton(offlineCard, "Collect", GrayButton, 54, 580, 812, Collect);
+        ButtonContent(offlineAdStatus.rectTransform, 115, 26, 0.53f, 1);
+        offlineCollect = DialogButton(offlineCard, "Collect", GoldButton, 210, 620, 500, Collect, true);
 
         prestigeCard = Card("Prestige", "ic_prestige.png", "PRESTIGE");
         prestigeGems = DialogLabel(prestigeCard, "", 64, 227, 95, Gold);
         DialogLabel(prestigeCard, "Prestige resets your coins and buildings. Gems increase future production.",
             44, 332, 180, Ivory);
-        prestigeCancel = DialogButton(prestigeCard, "Cancel", GrayButton, 54, 559, 394, CloseDialog);
-        prestigeConfirm = DialogButton(prestigeCard, "Prestige", GoldButton, 472, 559, 394, () => IdleEngine.I.Prestige());
+        prestigeCancel = DialogButton(prestigeCard, "Cancel", null, 54, 559, 394, CloseDialog);
+        prestigeConfirm = DialogButton(prestigeCard, "Prestige", GoldButton, 472, 559, 394, () => IdleEngine.I.Prestige(), true);
 
         statsCard = Card("Milestone and stats", "ic_milestone.png", "MILESTONES / STATS");
         statsLifetime = Stat(statsCard, "Lifetime coins", 226);
@@ -281,10 +285,10 @@ public sealed partial class CoinForgeUI
         return label;
     }
 
-    Button DialogButton(Transform parent, string text, string image, float x, float y, float width, UnityAction action)
+    Button DialogButton(Transform parent, string text, string image, float x, float y, float width, UnityAction action, bool canDisable = false)
     {
-        var button = ActionButton(parent, text, image, action);
-        Area(Label(button.transform, text, 48, Ink).rectTransform, 0.04f, 0.08f, 0.96f, 0.90f);
+        var button = ActionButton(parent, text, image, action, canDisable);
+        ButtonContent(Label(button.transform, text, 48, image == null ? Ivory : Ink).rectTransform, 16, 16);
         Place((RectTransform)button.transform, x, y, width, 138);
         return button;
     }
@@ -323,9 +327,10 @@ public sealed partial class CoinForgeUI
         float designHeight = safeHeight / pxPerUnit;
         design.sizeDelta = new Vector2(Width, designHeight);
         design.localScale = Vector3.one * (pxPerUnit / canvas.scaleFactor);
-        targetSize = Mathf.Max(120, Mathf.Ceil(48 * density / pxPerUnit));
-        LayoutDialogButtons();
         int minText = Mathf.CeilToInt(14 * scaledDensity / pxPerUnit);
+        targetSize = Mathf.Max(2 * ButtonBorderY + minText + 8, Mathf.Ceil(48 * density / pxPerUnit));
+        float stackedHeight = Mathf.Max(182, 2 * ButtonBorderY + 2 * (minText + 8));
+        LayoutDialogButtons(stackedHeight);
         foreach (var item in labels)
         {
             item.label.resizeTextMinSize = minText;
@@ -338,7 +343,7 @@ public sealed partial class CoinForgeUI
         float coinSize = Mathf.Min(634, stageHeight - 43);
         Place(tapButton, (650 - coinSize) * 0.5f, (stageHeight - coinSize) * 0.44f - 8, coinSize, coinSize);
         Place(tapHint, 0, stageHeight - 73, 650, 62);
-        float adHeight = Mathf.Max(142, targetSize);
+        float adHeight = stackedHeight;
         float railHeight = 58 + 2 * adHeight + 16;
         Place(adRail, 631, (stageHeight - railHeight) * 0.48f, 388, railHeight);
         Place((RectTransform)boostAd.transform, 0, 58, 388, adHeight);
@@ -352,22 +357,22 @@ public sealed partial class CoinForgeUI
         float listY = 44 + 2 * targetSize;
         float listHeight = Mathf.Max(0, designHeight - shopY - listY - 16);
         Place(viewport, 26, listY, 980, listHeight);
-        rowHeight = Mathf.Max(165, targetSize / 0.832f);
+        rowHeight = Mathf.Ceil(stackedHeight / 0.832f);
         float contentY = Mathf.Clamp(list.anchoredPosition.y, 0, Mathf.Max(0, rows.Length * (rowHeight + 10) - listHeight));
         Place(list, 0, -contentY, 980, rows.Length * (rowHeight + 10) - 10);
         for (int i = 0; i < rows.Length; i++)
             Place(rows[i].Background.rectTransform.parent as RectTransform, 0, i * (rowHeight + 10), 980, rowHeight);
     }
 
-    void LayoutDialogButtons()
+    void LayoutDialogButtons(float stackedHeight)
     {
         float height = Mathf.Max(138, targetSize);
         float extra = height - 138;
-        offlineCard.sizeDelta = new Vector2(920, 780 + 2 * extra);
+        offlineCard.sizeDelta = new Vector2(920, 780 + extra + (stackedHeight - 138));
         prestigeCard.sizeDelta = new Vector2(920, 780 + extra);
         statsCard.sizeDelta = new Vector2(920, 780 + extra);
-        Place((RectTransform)offlineAd.transform, 54, 426, 812, height);
-        Place((RectTransform)offlineCollect.transform, 54, 580 + extra, 812, height);
+        Place((RectTransform)offlineAd.transform, 54, 426, 812, stackedHeight);
+        Place((RectTransform)offlineCollect.transform, 210, 442 + stackedHeight, 500, height);
         Place((RectTransform)prestigeCancel.transform, 54, 559, 394, height);
         Place((RectTransform)prestigeConfirm.transform, 472, 559, 394, height);
         Place((RectTransform)statsClose.transform, 54, 595, 812, height);
@@ -410,6 +415,13 @@ public sealed partial class CoinForgeUI
         rect.offsetMin = rect.offsetMax = Vector2.zero;
     }
 
+    static void ButtonContent(RectTransform rect, float left, float right, float top = 0, float bottom = 1)
+    {
+        Area(rect, 0, top, 1, bottom);
+        rect.offsetMin = new Vector2(left, ButtonBorderY * (2 * bottom - 1));
+        rect.offsetMax = new Vector2(-right, ButtonBorderY * (2 * top - 1));
+    }
+
     static Image Solid(Transform parent, string name, Color color)
     {
         Image image = Box(parent, name).gameObject.AddComponent<Image>();
@@ -442,10 +454,24 @@ public sealed partial class CoinForgeUI
         return label;
     }
 
-    Button ActionButton(Transform parent, string name, string sprite, UnityAction action)
+    void SetAvailable(Button button, bool available)
+    {
+        button.interactable = available;
+        if (disabledFaces.TryGetValue(button, out var face)) face.enabled = !available;
+    }
+
+    Button ActionButton(Transform parent, string name, string sprite, UnityAction action, bool canDisable = false)
     {
         var root = Box(parent, name);
-        Image image = sprite == null ? Solid(root, "Touch target", Color.clear) : Art(root, sprite, true);
+        Image image;
+        if (sprite == null)
+        {
+            Solid(root, "Gold outline", new Color32(182, 126, 48, 255));
+            image = Solid(root, "Secondary face", new Color32(54, 38, 27, 255));
+            image.rectTransform.offsetMin = new Vector2(4, 4);
+            image.rectTransform.offsetMax = new Vector2(-4, -4);
+        }
+        else image = Art(root, sprite, true);
         image.raycastTarget = true;
         var button = root.gameObject.AddComponent<Button>();
         button.targetGraphic = image;
@@ -455,6 +481,12 @@ public sealed partial class CoinForgeUI
         button.colors = colors;
         button.navigation = new Navigation { mode = Navigation.Mode.None };
         button.onClick.AddListener(action);
+        if (canDisable)
+        {
+            var disabled = Art(root, GrayButton, true);
+            disabled.enabled = false;
+            disabledFaces.Add(button, disabled);
+        }
         return button;
     }
 }

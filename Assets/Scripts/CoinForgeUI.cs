@@ -142,10 +142,10 @@ public sealed partial class CoinForgeUI : MonoBehaviour
     void RefreshAdControls()
     {
         bool ready = !adInFlight && AdManager.I != null && AdManager.I.RewardedReady;
-        boostAd.interactable = ready;
-        warpAd.interactable = ready;
-        offlineAd.interactable = ready;
-        offlineCollect.interactable = !adInFlight;
+        SetAvailable(boostAd, ready);
+        SetAvailable(warpAd, ready);
+        SetAvailable(offlineAd, ready);
+        SetAvailable(offlineCollect, !adInFlight);
     }
 
     void Refresh()
@@ -171,7 +171,7 @@ public sealed partial class CoinForgeUI : MonoBehaviour
         if (boostSeconds != shownBoostSeconds)
         {
             shownBoostSeconds = boostSeconds;
-            Set(boostState, boostSeconds > 0 ? "2x active  •  " + BigNum.Time(boostSeconds) : "2x inactive");
+            Set(boostState, boostSeconds > 0 ? "Boost " + BigNum.Time(boostSeconds) : "Boost: OFF");
             boostBadge.alpha = boostSeconds > 0 ? 1 : 0.58f;
         }
 
@@ -229,18 +229,22 @@ public sealed partial class CoinForgeUI : MonoBehaviour
             row.PriceValue = cost;
             row.BuyCount = count;
             Set(row.Price, BigNum.Format(cost));
-            Set(row.BuyLabel, count == 0 ? "Min. x1" : "Buy x" + BigNum.Format(count));
+            Set(row.BuyLabel, quantity == 0 ? "Buy Max" : "Buy x" + BigNum.Format(count));
         }
-        row.Buy.interactable = affordable;
+        SetAvailable(row.Buy, affordable);
         row.Background.color = affordable ? ShopRow : MutedRow;
-        row.BuyGold.enabled = affordable;
-        row.BuyGray.enabled = !affordable;
     }
 
     void Choose(int count)
     {
         quantity = count;
-        for (int i = 0; i < modes.Length; i++) modes[i].enabled = quantity == ModeCounts[i];
+        for (int i = 0; i < modes.Length; i++)
+        {
+            bool selected = quantity == ModeCounts[i];
+            modes[i].enabled = selected;
+            modeLabels[i].color = selected ? Ink : Ivory;
+        }
+        foreach (var row in rows) row.BuyCount = -1;
         Refresh();
     }
 
@@ -294,7 +298,7 @@ public sealed partial class CoinForgeUI : MonoBehaviour
             case Dialog.Prestige:
                 int pending = engine.PendingGems();
                 Set(prestigeGems, BigNum.Format(engine.Gems) + "  →  " + BigNum.Format(pending) + " Gems");
-                prestigeConfirm.interactable = pending > engine.Gems;
+                SetAvailable(prestigeConfirm, pending > engine.Gems);
                 break;
             case Dialog.Stats:
                 var upgrades = engine.Upgrades;
