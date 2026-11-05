@@ -1,19 +1,19 @@
 # IC-02 · Coin Forge
 
-## Integrasi Unity
+## Unity integration
 
-- `Assets/Scenes/Main.unity` memakai `Assets/Prefabs/CoinForgeUI.prefab`.
-- `CoinForgeUI.cs` menangani event, aksi, harga, popup, dan statistik. `CoinForgeUI.View.cs` membangun tampilan dan menyesuaikan safe area. `CoinForgeUI.Tap.cs` menangani scale punch, flipbook, dan pool 20 label.
-- `Assets/Editor/CoinForgeSetup.cs` memasang prefab yang sama saat membuat ulang Main.
-- Panel upgrade dan shield popup berbagi batas bawah. Insets mengikuti safe area, tinggi banner runtime, dan jarak 16dp. Selagi tinggi runtime belum tersedia, acuan 167px diskalakan terhadap lebar 1080px.
-- Panel memakai border 32px pada keempat sisi. Tombol memakai 48px kiri dan kanan serta 40px atas dan bawah. Keduanya menggunakan `Image.Type.Sliced`.
-- UI memakai font runtime bawaan Unity dengan gaya tebal. Ukuran sentuh dan ukuran teks minimum mengikuti density dan scaled density Android.
+- `Assets/Scenes/Main.unity` uses `Assets/Prefabs/CoinForgeUI.prefab` with the 1080×1920 Canvas Scaler and a 0.5 match.
+- `CoinForgeUI.cs` handles events, actions, prices, dialogs, and stats. `CoinForgeUI.View.cs` builds the view and applies safe area and banner insets. `CoinForgeUI.Tap.cs` handles the scale punch, 8-frame coin burst, 6-frame sparkle, and 20-label pool.
+- `Assets/Editor/CoinForgeSetup.cs` installs the same prefab when it recreates Main.
+- The upgrade panel and popup shield share a lower edge. The layout reads the runtime banner height and adds 16dp. Before that height is available, it scales the 167px reference from a 1080px screen.
+- Panel borders are 32px on each side. Button borders are 48px left and right and 40px top and bottom. Both use `Image.Type.Sliced`.
+- The English UI uses Unity’s built-in font in bold. Minimum touch and text sizes follow Android density and scaled density.
 
-## Slot IC-03
+## IC-03 asset slots
 
-Nama objek Image mengikuti nama PNG. Batas impor adalah dimensi maksimum Android.
+Image object names match the PNG filenames. The import limit is the maximum Android texture dimension.
 
-| Slot PNG | Sumber | Batas impor |
+| PNG slot | Source size | Import limit |
 | --- | --- | --- |
 | `bld_01_coin_press.png`, `bld_02_mini_forge.png`, `bld_03_smelter.png`, `bld_04_foundry.png`, `bld_05_mint.png`, `bld_06_vault.png`, `bld_07_bank.png`, `bld_08_exchange.png`, `bld_09_treasury.png`, `bld_10_galaxy_mint.png`, `bld_locked.png` | 512×512 | 256 |
 | `coin_icon.png`, `gem_icon.png` | 128×128 | 128 |
@@ -22,29 +22,29 @@ Nama objek Image mengikuti nama PNG. Batas impor adalah dimensi maksimum Android
 | `bg_main.png` | 1080×2340 | 2048 |
 | `panel_frame.png` | 512×512 | 512 |
 | `btn_gold.png`, `btn_gray.png`, `btn_green.png` | 512×160 | 512 |
-| `vfx_coin_burst_01.png` hingga `vfx_coin_burst_08.png` | 256×256 per frame | 256 |
-| `vfx_sparkle_01.png` hingga `vfx_sparkle_06.png` | 256×256 per frame | 256 |
+| `vfx_coin_burst_01.png` through `vfx_coin_burst_08.png` | 256×256 per frame | 256 |
+| `vfx_sparkle_01.png` through `vfx_sparkle_06.png` | 256×256 per frame | 256 |
 
-Aset toko yang diimpor terdiri dari `app_icon_512.png` (512×512) dan `feature_graphic.png` (1024×500).
+Store assets imported with IC-03 include `app_icon_512.png` (512×512) and `feature_graphic.png` (1024×500).
 
-## Catatan PM
+## Verification
 
-- IC-01 belum menyimpan durasi main. Statistik mulai mengakumulasi waktu foreground sejak IC-02 dalam kunci PlayerPrefs UI tersendiri.
-- IC-01 menyediakan tinggi banner melalui getter. UI membaca perubahan pada tick koin dan saat ukuran Canvas berubah.
-- Durasi offline yang ditampilkan berasal dari `OfflineEarned` dan mengikuti batas waktu yang dihitung IC-01.
-- Rumus harga, hadiah, pembelian, dan Prestige memakai API IC-01. Kode inti tidak berubah.
+The Android development APK built in Unity 6000.3.27f1. Play Mode passed 18 checks. The Redmi also passed checks for x1, x10, and Max prices and availability, purchase, Stats, and Prestige. Collect dismissed Welcome Back and credited coins. The device showed Time Warp and its reward when rewarded ads were ready and the purchase ETA exceeded 180 seconds. A separate fixture with an affordable purchase kept Time Warp hidden.
 
-## Verifikasi
-
-Unity 6000.3.27f1 berhasil membangun APK development Android. Play Mode lulus 18 pemeriksaan, termasuk harga dan ketersediaan x1, x10, dan Max, pembelian, Welcome Back dan klaim offline, Statistik, konfirmasi Prestige, serta tampilan dan nilai Time Warp sesuai kondisi siap dan batas 180 detik. Saat rewarded belum siap, tombol Boost nonaktif dengan label “Memuat…” dan Time Warp tersembunyi.
-
-| Tangkapan layar Redmi Note 7 | Resolusi | Kondisi |
+| Redmi Note 7 screenshot | Resolution | Display mode |
 | --- | --- | --- |
-| [16:9](16x9.png) | 1080×1920 | Override ukuran layar, rewarded sedang dimuat |
-| [19.5:9](19.5x9.png) | 1080×2340 | Ukuran fisik dengan notch dan banner uji aktif |
-| [20:9](20x9.png) | 1080×2400 | Override ukuran layar dengan banner uji aktif |
-| [Welcome Back di atas banner](welcome-banner.png) | 1080×2340 | Banner uji AdMob aktif di bawah popup |
+| [16:9](16x9.png) | 1080×1920 | Temporary display override |
+| [19.5:9](19.5x9.png) | 1080×2340 | Physical display with notch |
+| [20:9](20x9.png) | 1080×2400 | Temporary display override |
+| [Welcome Back and native test banner](welcome-banner.png) | 1080×2340 | Native AdMob banner beneath the popup |
 
-Pada resolusi fisik, Unity melaporkan safe area dengan inset atas 79px dan AdMob melaporkan tinggi banner 167px. Pada density 440dpi, batas panel menyisakan 44px atau 16dp di atas banner. Klaim lewat tombol Ambil menutup popup dan menambah koin. Time Warp terlihat saat rewarded siap dan ETA melebihi 180 detik, lalu tersembunyi pada skenario dengan pembelian terjangkau.
+Unity reported a 79px top safe-area inset on the physical display. The native banner measured 167px. At 440dpi the layout reserves 44px, or 16dp, above it. Editor QA also exercised a simulated punch-hole inset.
 
-Pengukuran awal development build pada 1080×2340 mencatat 35,7 FPS saat diam dan 33,3 FPS saat 96 tap dalam delapan detik. P95 waktu frame sekitar 50 ms. Selama kedua sampel tidak tercatat koleksi GC, dan P95 alokasi per frame tetap 218 B. Target 60 FPS belum tercapai pada sampel ini.
+The initial native-resolution development build averaged 35.73 FPS idle and 33.34 FPS during fast taps. The rendering pass reduced fullscreen layers, simplified the scene camera, and isolated the HUD and tap animation from the main Canvas. The final English development build measured 47.69 FPS idle and 49.08 FPS during 96 taps in eight seconds at 1080×2340 with the banner active. P95 frame time was 50.01 ms in both samples. P95 GC allocation was 218 B per frame, and neither sample recorded a collection. The target of a sustained 60 FPS remains unmet on this Redmi. Lower-resolution diagnostic runs stayed around 50 FPS, so the project uses native resolution.
+
+## Data notes
+
+- IC-01 has no stored play time. The UI records foreground time from IC-02 onward in a separate PlayerPrefs key.
+- The UI reads the banner getter on the coin heartbeat and when the Canvas dimensions change.
+- The displayed offline duration comes from `OfflineEarned` and follows the IC-01 cap.
+- Pricing, rewards, purchases, and Prestige continue to use the IC-01 APIs. The six core scripts match baseline `cc3eb74`.
