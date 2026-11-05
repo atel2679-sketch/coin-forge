@@ -54,6 +54,13 @@ public static class CoinForgeSetup
     {
         Directory.CreateDirectory("Assets/Scenes");
         var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+        var camera = Camera.main;
+        camera.clearFlags = CameraClearFlags.SolidColor;
+        camera.backgroundColor = new Color32(30, 26, 22, 255);
+        camera.cullingMask = 0;
+        camera.allowHDR = false;
+        camera.allowMSAA = false;
+        camera.useOcclusionCulling = false;
 
         var root = new GameObject("GameRoot");
         root.AddComponent<IdleEngine>();

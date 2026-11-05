@@ -56,12 +56,11 @@ public sealed partial class CoinForgeUI
             new GameObject("Coin Forge Input", typeof(EventSystem), typeof(StandaloneInputModule))
                 .transform.SetParent(transform, false);
 
-        Solid(transform, "Forge base", new Color32(30, 26, 22, 255));
-        var backdrop = Art(transform, "bg_main.png", false);
+        var backdrop = Art(transform, "bg_main.png");
+        backdrop.color = new Color32(219, 211, 204, 255);
         var crop = backdrop.gameObject.AddComponent<AspectRatioFitter>();
         crop.aspectRatio = 1080f / 2340;
         crop.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-        Solid(transform, "Forge shade", new Color(0.12f, 0.07f, 0.05f, 0.22f));
 
         safe = Box(transform, "Safe area above banner");
         safe.gameObject.AddComponent<RectMask2D>();
@@ -78,6 +77,7 @@ public sealed partial class CoinForgeUI
     void BuildHud()
     {
         var hud = Box(design, "HUD");
+        hud.gameObject.AddComponent<Canvas>();
         Place(hud, 24, 22, 1032, 240);
         Art(hud, "panel_frame.png", true).color = new Color(0.77f, 0.69f, 0.64f);
         Text title = Label(hud, "COIN FORGE", 36, Gold, TextAnchor.MiddleLeft);
@@ -108,10 +108,13 @@ public sealed partial class CoinForgeUI
     {
         stage = Box(design, "Forge");
         tapButton = Box(stage, "Tap coin");
-        var coin = Art(tapButton, "coin_main.png");
-        coin.raycastTarget = true;
+        var hit = Solid(tapButton, "Touch target", Color.clear);
+        hit.raycastTarget = true;
+        var animation = Box(tapButton, "Coin animation");
+        animation.gameObject.AddComponent<Canvas>();
+        var coin = Art(animation, "coin_main.png");
         var tap = tapButton.gameObject.AddComponent<Button>();
-        tap.targetGraphic = coin;
+        tap.targetGraphic = hit;
         tap.transition = Selectable.Transition.None;
         tap.onClick.AddListener(Tap);
         tapHint = Label(stage, "KETUK UNTUK MENEMPA", 39, Gold).rectTransform;
