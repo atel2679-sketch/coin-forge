@@ -1,6 +1,6 @@
 using System;
 using GoogleMobileAds.Api;
-using GoogleMobileAds.Common;
+using GoogleMobileAds.Ump.Api;
 using UnityEngine;
 
 /// <summary>
@@ -8,7 +8,7 @@ using UnityEngine;
 /// - Rewarded: reward granted ONLY inside OnUserEarnedReward, then forwarded via GameEvents.
 /// - Interstitial: 5-min global cooldown, 3-min session grace, 60s after any rewarded.
 /// - Banner: anchored adaptive at bottom; UI must add BannerHeightPx inset to upgrade panel.
-/// NOTE: Run UMP consent (GDPR) before calling Init() in production.
+/// IC-04: UMP consent (GDPR) runs first; ads are initialized only once CanRequestAds() is true.
 /// </summary>
 public class AdManager : MonoBehaviour
 {
@@ -50,6 +50,7 @@ public class AdManager : MonoBehaviour
     {
         if (I != null) { Destroy(gameObject); return; }
         I = this;
+        mainThread = System.Threading.SynchronizationContext.Current;
         DontDestroyOnLoad(gameObject);
         _ = Pacing;   // session clock starts at launch, not at first ad
     }
@@ -67,17 +68,121 @@ public class AdManager : MonoBehaviour
 
     void Start() => StartAfterConsent();
 
+    // ================= CONSENT (UMP, IC-04) =================
+    /// <summary>Raised when the privacy-options requirement becomes known or changes (UI shows/hides its button).</summary>
+    public static event Action PrivacyOptionsChanged;
+
+    const float ConsentRetrySeconds = 60;
+    bool consentInFlight, consentKnown, consentStarted;
+
+    public bool PrivacyOptionsRequired =>
+        consentKnown && ConsentInformation.PrivacyOptionsRequirementStatus == PrivacyOptionsRequirementStatus.Required;
+
     /// <summary>
-    /// CONSENT HOOK: production must run the UMP consent flow here and call Init() only
-    /// once ConsentInformation.CanRequestAds() is true. WO IC-01 calls Init() directly (test IDs only).
+    /// Start order: ConsentInformation.Update -> LoadAndShowConsentFormIfRequired -> if CanRequestAds -> MobileAds.Initialize.
+    /// Everything is asynchronous, so the tutorial and the game keep running. Failures (offline) are retried later.
     /// </summary>
-    void StartAfterConsent() => Init();
+    void StartAfterConsent()
+    {
+        consentStarted = true;
+        // Consent stored by an earlier session already allows ads: start loading now, refresh consent in parallel.
+        if (ConsentInformation.CanRequestAds()) Init();
+        RequestConsent();
+    }
+
+    void RequestConsent()
+    {
+        if (consentInFlight) return;
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            Debug.Log("[Consent] Offline; retrying later");
+            ScheduleConsentRetry();
+            return;
+        }
+        consentInFlight = true;
+        var request = new ConsentRequestParameters();
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        request.ConsentDebugSettings = DebugConsentSettings();
+#endif
+        ConsentInformation.Update(request, updateError => OnMain(() =>
+        {
+            if (updateError != null)
+            {
+                consentInFlight = false;
+                Debug.LogWarning($"[Consent] Update failed: {updateError.Message}");
+                ScheduleConsentRetry();
+                return;
+            }
+            ConsentForm.LoadAndShowConsentFormIfRequired(formError => OnMain(() =>
+            {
+                consentInFlight = false;
+                consentKnown = true;
+                if (formError != null) Debug.LogWarning($"[Consent] Form failed: {formError.Message}");
+                Debug.Log($"[Consent] status={ConsentInformation.ConsentStatus} canRequestAds={ConsentInformation.CanRequestAds()} " +
+                          $"privacyOptions={ConsentInformation.PrivacyOptionsRequirementStatus}");
+                PrivacyOptionsChanged?.Invoke();
+                if (ConsentInformation.CanRequestAds()) Init();
+                else ScheduleConsentRetry();
+            }));
+        }));
+    }
+
+    void ScheduleConsentRetry()
+    {
+        CancelInvoke(nameof(RequestConsent));
+        Invoke(nameof(RequestConsent), ConsentRetrySeconds);
+    }
+
+    void OnApplicationPause(bool paused)
+    {
+        // Back from background (maybe online again): retry right away if ads never started.
+        if (!paused && consentStarted && !initStarted && !consentInFlight) RequestConsent();
+    }
+
+    /// <summary>"Privacy settings" button: lets the user change or withdraw consent.</summary>
+    public void ShowPrivacyOptions()
+    {
+        ConsentForm.ShowPrivacyOptionsForm(formError => OnMain(() =>
+        {
+            if (formError != null) Debug.LogWarning($"[Consent] Privacy options failed: {formError.Message}");
+            Debug.Log($"[Consent] Privacy options closed; canRequestAds={ConsentInformation.CanRequestAds()}");
+            PrivacyOptionsChanged?.Invoke();
+            if (ConsentInformation.CanRequestAds()) Init();
+        }));
+    }
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+    // ---------- IC-04 consent testing (dev builds only) ----------
+    public const string DebugEeaKey = "dbg_ump_eea";
+    // Redmi Note 7 test device (hash printed by the SDK in logcat). Add more devices here.
+    static readonly System.Collections.Generic.List<string> TestDeviceHashes =
+        new System.Collections.Generic.List<string> { "3EEB92147C2A16BE07C8D9854A3AB576" };
+
+    static ConsentDebugSettings DebugConsentSettings()
+    {
+        bool eea = PlayerPrefs.GetInt(DebugEeaKey, 0) == 1;
+        Debug.Log("[Consent] Debug geography: " + (eea ? "EEA" : "device default"));
+        return new ConsentDebugSettings
+        {
+            DebugGeography = eea ? DebugGeography.EEA : DebugGeography.Disabled,
+            TestDeviceHashedIds = TestDeviceHashes
+        };
+    }
+
+    public static void DebugResetConsent()
+    {
+        ConsentInformation.Reset();
+        Debug.Log("[Consent] Reset");
+    }
+#endif
 
     bool initStarted;
     public void Init()
     {
         if (initStarted) return;
         initStarted = true;
+        CancelInvoke(nameof(RequestConsent));
+        Debug.Log("[Ads] MobileAds.Initialize (consent allows ads)");
         // Plugin v11: every SDK callback may arrive on a background thread -> marshal with OnMain().
         MobileAds.Initialize(_ => OnMain(() =>
         {
@@ -87,7 +192,16 @@ public class AdManager : MonoBehaviour
         }));
     }
 
-    static void OnMain(Action a) => MobileAdsEventExecutor.ExecuteInUpdate(a);
+    // SDK callbacks may arrive on background threads. Marshal them to Unity's main thread through the
+    // SynchronizationContext captured in Awake. (MobileAdsEventExecutor only exists after MobileAds.Initialize,
+    // so it cannot carry the UMP consent callbacks that must run *before* Initialize.)
+    static System.Threading.SynchronizationContext mainThread;
+
+    static void OnMain(Action a)
+    {
+        if (mainThread != null) mainThread.Post(_ => a(), null);
+        else a();
+    }
 
     // ================= REWARDED =================
     void LoadRewarded()

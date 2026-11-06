@@ -48,6 +48,7 @@ public sealed partial class CoinForgeUI
         BuildHelpScrollCues();
         helpReplay = DialogButton(helpCard, "Replay tutorial", null, 48, 0, 473, ReplayTutorial);
         helpClose = DialogButton(helpCard, "Close", GoldButton, 538, 0, 334, CloseDialog);
+        BuildPrivacy();   // IC-04 C3
     }
 
     Text HelpTopic(Transform parent, string icon, string title, string body, string extraIcon = null)
@@ -144,6 +145,7 @@ public sealed partial class CoinForgeUI
         Set(helpBoosts, "2x income for " + HelpNumber(engine.boostHoursPerAd) + "h (stacks up to " +
             HelpNumber(engine.boostMaxHours) + "h). Time Warp instantly gives " +
             HelpNumber(engine.timeWarpHours) + "h of income. You can also double your offline earnings.");
+        OnPrivacyOptionsChanged();
         Open(Dialog.Help);
         helpScroll.StopMovement();
         LayoutHelpTopics();
@@ -160,16 +162,19 @@ public sealed partial class CoinForgeUI
         Place(helpLink, 509, 25, targetSize, targetSize);
         float height = Mathf.Min(1490, designHeight - 64);
         helpCard.sizeDelta = new Vector2(920, height);
-        float viewportHeight = Mathf.Max(0, height - targetSize - 199);
+        float privacyRow = PrivacyRowHeight;  // IC-04 C3: 0 unless UMP requires privacy options
+        float viewportHeight = Mathf.Max(0, height - targetSize - 199 - privacyRow);
         Place(helpViewport, 48, 135, HelpWidth, viewportHeight);
         Place(helpScrollBar, 852, 135, 24, viewportHeight);
-        Place((RectTransform)helpReplay.transform, 48, height - targetSize - 36, 473, targetSize);
-        Place((RectTransform)helpClose.transform, 538, height - targetSize - 36, 334, targetSize);
+        Place((RectTransform)helpReplay.transform, 48, height - targetSize - 36 - privacyRow, 473, targetSize);
+        Place((RectTransform)helpClose.transform, 538, height - targetSize - 36 - privacyRow, 334, targetSize);
+        LayoutPrivacy(height);
         if (dialog == Dialog.Help) LayoutHelpTopics();
     }
 
     void OnDestroy()
     {
         if (helpFadeTexture != null) Destroy(helpFadeTexture);
+        ReleasePrivacy();
     }
 }

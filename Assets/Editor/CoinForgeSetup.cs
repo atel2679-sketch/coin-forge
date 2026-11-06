@@ -41,7 +41,7 @@ public static class CoinForgeSetup
         PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, PackageName);
         PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
         PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
-        PlayerSettings.Android.minSdkVersion = (AndroidSdkVersions)23;
+        PlayerSettings.Android.minSdkVersion = (AndroidSdkVersions)25; // Unity 6.3 minimum (PM-approved in IC-01)
         PlayerSettings.Android.targetSdkVersion = AndroidSdkVersions.AndroidApiLevelAuto; // highest installed SDK
         PlayerSettings.defaultInterfaceOrientation = UIOrientation.Portrait;
         PlayerSettings.runInBackground = false;

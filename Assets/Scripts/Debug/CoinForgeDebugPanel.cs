@@ -25,10 +25,13 @@ public sealed class CoinForgeDebugPanel : MonoBehaviour
         ("+1e12 coins", () => IdleEngine.I.DebugAddCoins(1e12)),
         ("Skip time +1 hour (offline)", () => FindFirstObjectByType<OfflineEarnings>().DebugSkip(3600)),
         ("Reset save (closes app)", ResetSave),
-        ("Perf probe 60 s (closes panel)", () => CoinForgePerfProbe.Begin(60)),
+        ("Consent: toggle EEA test geography", ToggleEea),
+        ("Consent: reset (applies on restart)", AdManager.DebugResetConsent),
+        (PerfLabel, () => CoinForgePerfProbe.Begin(60)),
         ("Close", null),
     };
 
+    const string PerfLabel = "Perf probe 60 s (closes panel)";
     GUIStyle button, label;
     string status = "";
 
@@ -61,7 +64,16 @@ public sealed class CoinForgeDebugPanel : MonoBehaviour
         Debug.LogWarning("[Debug] HUD title not found; panel unavailable");
     }
 
-    public void Open() { status = ""; enabled = true; }
+    public void Open() { status = EeaState(); enabled = true; }
+
+    static string EeaState() => "Consent EEA test: " + (PlayerPrefs.GetInt(AdManager.DebugEeaKey, 0) == 1 ? "ON" : "OFF");
+
+    static void ToggleEea()
+    {
+        PlayerPrefs.SetInt(AdManager.DebugEeaKey, PlayerPrefs.GetInt(AdManager.DebugEeaKey, 0) == 1 ? 0 : 1);
+        PlayerPrefs.Save();
+        Debug.Log("[Debug] " + EeaState() + " (restart the app)");
+    }
     public void Close() => enabled = false;
 
     void OnGUI()
@@ -86,9 +98,9 @@ public sealed class CoinForgeDebugPanel : MonoBehaviour
             if (!GUI.Button(rect, Actions[i].label, button)) continue;
             if (Actions[i].action == null) { Close(); continue; }
             Actions[i].action();
-            status = "Done: " + Actions[i].label;
+            status = "Done: " + Actions[i].label + " / " + EeaState();
             Debug.Log("[Debug] " + Actions[i].label);
-            if (i == 4) Close();
+            if (Actions[i].label == PerfLabel) Close();
         }
     }
 
