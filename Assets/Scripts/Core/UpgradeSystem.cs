@@ -37,8 +37,11 @@ public class UpgradeSystem
     {
         double r = Defs[i].rate, c = CostOf(i);
         if (coins < c) return 0;
-        int k = Math.Max(0, (int)Math.Floor(Math.Log(coins * (r - 1) / c + 1, r)));
-        while (k > 0 && CostOf(i, k) > coins) k--;   // guard against floating-point overshoot
+        double estimate = Math.Floor(Math.Log(coins * (r - 1) / c + 1, r));
+        int k = double.IsNaN(estimate) ? 0 : (int)Math.Min(int.MaxValue - 1, Math.Max(0, estimate));
+        // The log estimate can be off by one either way at exact boundaries (floating point): correct it.
+        while (k > 0 && CostOf(i, k) > coins) k--;
+        while (CostOf(i, k + 1) <= coins) k++;
         return k;
     }
 

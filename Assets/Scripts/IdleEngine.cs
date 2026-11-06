@@ -2,8 +2,9 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Core idle engine: taps, delta-time accumulation, multipliers, ad reward effects, save/load.
+/// Scene wrapper around <see cref="GameState"/>: taps, delta-time accumulation, ad reward effects, save/load.
 /// Place on a single persistent GameObject. UI reads values via GameEvents or public getters.
+/// IC-04: game rules moved into GameState (unit-tested); this class keeps the IC-01 public API.
 /// </summary>
 public class IdleEngine : MonoBehaviour
 {
@@ -17,24 +18,25 @@ public class IdleEngine : MonoBehaviour
     public double timeWarpHours = 4;
     public float uiEventInterval = 0.1f;   // throttle UI updates (10 Hz)
 
-    public UpgradeSystem Upgrades { get; private set; }
-    public double Coins { get; private set; }
-    public double Lifetime { get; private set; }
-    public int Gems { get; private set; }
-    public double BoostEndUtc { get; private set; } // unix seconds
+    GameState state = new GameState();
+    public GameState State => state;
 
-    public bool BoostActive => Now() < BoostEndUtc;
-    public double BoostRemaining => Math.Max(0, BoostEndUtc - Now());
-    public double PrestigeMult => 1 + 0.02 * Gems;
-    public double IncomePerSec => Upgrades.TotalProd() * PrestigeMult * (BoostActive ? 2 : 1);
+    public UpgradeSystem Upgrades => state.Upgrades;
+    public double Coins => state.Coins;
+    public double Lifetime => state.Lifetime;
+    public int Gems => state.Gems;
+    public double BoostEndUtc => state.BoostEndUtc; // unix seconds
+
+    public bool BoostActive => state.BoostActive(Now());
+    public double BoostRemaining => state.BoostRemaining(Now());
+    public double PrestigeMult => state.PrestigeMult;
+    public double IncomePerSec => state.Income(Now());
     public double TapValue => (tapBase + tapIncomeShare * IncomePerSec) * (BoostActive ? 2 : 1);
     /// <summary>Base income without the ad boost — used for offline/time-warp so ads don't double-dip.</summary>
-    public double BaseIncomePerSec => Upgrades.TotalProd() * PrestigeMult;
+    public double BaseIncomePerSec => state.BaseIncome;
 
     float uiTimer, saveTimer;
-    const string SaveKey = "ic_save_v1";
-
-    [Serializable] class SaveData { public double coins, lifetime, boostEnd; public int gems; public int[] owned; }
+    const string SaveKey = "ic_save_v1";   // key kept from IC-01 so existing saves load; format is versioned inside
 
     void Awake()
     {
@@ -49,10 +51,9 @@ public class IdleEngine : MonoBehaviour
 
     void Update()
     {
-        // Delta-time accumulation (unscaled so pause menus using timeScale don't stop income)
         // Clamp: long frames after resume must not double-dip with offline earnings.
         float dt = Mathf.Min(Time.unscaledDeltaTime, 1f);
-        Add(IncomePerSec * dt);
+        state.Add(IncomePerSec * dt);
 
         uiTimer += Time.unscaledDeltaTime;
         if (uiTimer >= uiEventInterval)
@@ -67,19 +68,17 @@ public class IdleEngine : MonoBehaviour
     }
 
     // ---------- Public API (called by UI) ----------
-    public void Tap() => Add(TapValue);
+    public void Tap() => state.Add(TapValue);
 
     public bool Buy(int index, int amount = 1)
     {
-        double spent = Upgrades.TryBuy(index, amount, Coins);
-        if (spent <= 0) return false;
-        Coins -= spent;
+        if (state.Buy(index, amount) <= 0) return false;
         GameEvents.RaiseCoins(Coins);
         GameEvents.RaiseIncome(IncomePerSec);
         return true;
     }
 
-    public bool BuyMax(int index) => Buy(index, Upgrades.MaxAffordable(index, Coins));
+    public bool BuyMax(int index) => Buy(index, state.MaxAffordable(index));
 
     /// <summary>Seconds until the cheapest next building is affordable (for Time Warp prompt).</summary>
     public double SecondsToNextPurchase()
@@ -91,20 +90,18 @@ public class IdleEngine : MonoBehaviour
         return inc <= 0 ? double.MaxValue : (cheapest - Coins) / inc;
     }
 
-    public int PendingGems() => (int)Math.Floor(Math.Sqrt(Lifetime / 1e9));
+    public int PendingGems() => state.PendingGems;
 
     public void Prestige()
     {
-        int g = PendingGems();
-        if (g <= Gems) return;
-        Gems = g;
-        Coins = 0;
-        Upgrades = new UpgradeSystem(UpgradeSystem.DefaultDefs());
+        if (!state.Prestige()) return;
         Save();
+        GameEvents.RaiseCoins(Coins);
+        GameEvents.RaiseIncome(IncomePerSec);
         GameEvents.RaisePrestige(); // AdManager may show interstitial here (cooldown-guarded)
     }
 
-    public void AddOffline(double amount) => Add(amount);
+    public void AddOffline(double amount) => state.Add(amount);
 
     // ---------- Rewards ----------
     void OnReward(RewardType t)
@@ -112,46 +109,33 @@ public class IdleEngine : MonoBehaviour
         switch (t)
         {
             case RewardType.Boost2x:
-                double start = Math.Max(Now(), BoostEndUtc);           // stack
-                BoostEndUtc = Math.Min(start + boostHoursPerAd * 3600, Now() + boostMaxHours * 3600);
+                state.ExtendBoost(Now(), boostHoursPerAd, boostMaxHours);
                 break;
             case RewardType.TimeWarp:
-                Add(BaseIncomePerSec * timeWarpHours * 3600);
+                state.Add(state.TimeWarpReward(timeWarpHours));
                 break;
             // OfflineDouble is handled by OfflineEarnings
         }
         Save();
     }
 
-    void Add(double v)
-    {
-        if (v <= 0 || double.IsNaN(v) || double.IsInfinity(v)) return;
-        Coins += v;
-        Lifetime += v;
-    }
-
     // ---------- Persistence ----------
-    public static double Now() => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
+    public static double Now() => GameClock.Current.UtcNow;
 
     public void Save()
     {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (DebugSaveBlocked) return;
 #endif
-        var d = new SaveData { coins = Coins, lifetime = Lifetime, boostEnd = BoostEndUtc, gems = Gems, owned = Upgrades.Owned };
-        PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(d));
+        PlayerPrefs.SetString(SaveKey, state.ToJson());
         OfflineEarnings.StampNow();
         PlayerPrefs.Save();
     }
 
     void Load()
     {
-        var defs = UpgradeSystem.DefaultDefs();
-        string json = PlayerPrefs.GetString(SaveKey, "");
-        if (string.IsNullOrEmpty(json)) { Upgrades = new UpgradeSystem(defs); return; }
-        var d = JsonUtility.FromJson<SaveData>(json);
-        Coins = d.coins; Lifetime = d.lifetime; Gems = d.gems; BoostEndUtc = d.boostEnd;
-        Upgrades = new UpgradeSystem(defs, d.owned);
+        state = GameState.FromJson(PlayerPrefs.GetString(SaveKey, ""), out string error);
+        if (error != null) Debug.LogWarning("[Save] " + error + " — starting from a clean or sanitized state");
     }
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
@@ -160,7 +144,7 @@ public class IdleEngine : MonoBehaviour
 
     public void DebugAddCoins(double amount)
     {
-        Add(amount);
+        state.Add(amount);
         Save();
         GameEvents.RaiseCoins(Coins);
     }

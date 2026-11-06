@@ -31,12 +31,19 @@ public class AdManager : MonoBehaviour
     InterstitialAd interstitial;
     BannerView banner;
 
-    float lastInterstitial = -9999, lastRewarded = -9999, lastTimeWarp = -9999;
-    RewardType pendingType;
-    bool rewardEarned, rewardClosed, rewardGranted;
+    // IC-04: pacing and reward ordering live in tested Core classes.
+    readonly RewardFlow rewardFlow = new RewardFlow();
+    AdPacing pacing;
 
     public bool RewardedReady => rewarded != null && rewarded.CanShowAd();
-    public bool TimeWarpReady => RewardedReady && Time.realtimeSinceStartup - lastTimeWarp >= timeWarpCooldown;
+    public bool TimeWarpReady => RewardedReady && Pacing.TimeWarpOffCooldown;
+    AdPacing Pacing => pacing ??= new AdPacing(GameClock.Current)
+    {
+        InterstitialCooldown = interstitialCooldown,
+        SessionGrace = sessionGrace,
+        AfterRewardedGrace = afterRewardedGrace,
+        TimeWarpCooldown = timeWarpCooldown
+    };
     public float BannerHeightPx => banner != null ? banner.GetHeightInPixels() : 0;
 
     void Awake()
@@ -44,6 +51,7 @@ public class AdManager : MonoBehaviour
         if (I != null) { Destroy(gameObject); return; }
         I = this;
         DontDestroyOnLoad(gameObject);
+        _ = Pacing;   // session clock starts at launch, not at first ad
     }
 
     void OnEnable()
@@ -109,28 +117,24 @@ public class AdManager : MonoBehaviour
         if (!RewardedReady) return false;
         if (type == RewardType.TimeWarp && !TimeWarpReady) return false;
 
-        pendingType = type;
-        rewardEarned = rewardClosed = rewardGranted = false;
-        rewarded.Show(_ => OnMain(() => { rewardEarned = true; TryGrant(); })); // onUserEarnedReward
+        rewardFlow.Begin(type);
+        rewarded.Show(_ => OnMain(() => { if (rewardFlow.OnEarned()) Grant(); })); // onUserEarnedReward
         return true;
     }
 
     void OnRewardedClosed()
     {
-        lastRewarded = Time.realtimeSinceStartup;
-        rewardClosed = true;
-        TryGrant();
+        Pacing.MarkRewardedClosed();
+        if (rewardFlow.OnClosed()) Grant();
         LoadRewarded();
     }
 
-    // Earned and Closed can arrive in either order on Android: grant on whichever comes second, exactly once.
+    // Earned and Closed can arrive in either order on Android (RewardFlow grants on the second, exactly once).
     // Closed without Earned (user skipped) -> nothing is granted.
-    void TryGrant()
+    void Grant()
     {
-        if (!rewardEarned || !rewardClosed || rewardGranted) return;
-        rewardGranted = true;
-        if (pendingType == RewardType.TimeWarp) lastTimeWarp = Time.realtimeSinceStartup;
-        GameEvents.RaiseReward(pendingType);
+        if (rewardFlow.Pending == RewardType.TimeWarp) Pacing.MarkTimeWarpGranted();
+        GameEvents.RaiseReward(rewardFlow.Pending);
     }
 
     // ================= INTERSTITIAL =================
@@ -149,13 +153,10 @@ public class AdManager : MonoBehaviour
 
     public void TryShowInterstitial()
     {
-        float t = Time.realtimeSinceStartup;
-        if (t < sessionGrace) return;
-        if (t - lastInterstitial < interstitialCooldown) return;
-        if (t - lastRewarded < afterRewardedGrace) return;
+        if (!Pacing.InterstitialAllowed) return;
         if (interstitial == null || !interstitial.CanShowAd()) return;
 
-        lastInterstitial = t;
+        Pacing.MarkInterstitialShown();
         interstitial.Show();
     }
 

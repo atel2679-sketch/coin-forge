@@ -1,11 +1,10 @@
-using System;
 using UnityEngine;
 
 /// <summary>
-/// Computes background earnings on launch/resume.
+/// Computes background earnings on launch/resume (math in <see cref="OfflineCalc"/>, claim in <see cref="OfflineClaim"/>).
 /// Safeguards: UTC timestamps, clock-rollback detection, hard cap, minimum away time,
 /// and a high-water-mark timestamp so moving the clock back then forward can't farm time.
-/// For stronger protection, replace Now() with server/NTP time.
+/// For stronger protection, replace the clock with server/NTP time.
 /// </summary>
 public class OfflineEarnings : MonoBehaviour
 {
@@ -16,9 +15,9 @@ public class OfflineEarnings : MonoBehaviour
     const string LastKey = "ic_last_utc";
     const string MaxKey  = "ic_max_utc";   // highest timestamp ever seen
 
-    public double PendingAmount { get; private set; }
-    public double AwaySeconds { get; private set; }
-    bool doubled;
+    readonly OfflineClaim claim = new OfflineClaim();
+    public double PendingAmount => claim.Pending;
+    public double AwaySeconds => claim.AwaySeconds;
 
     void OnEnable()  => GameEvents.RewardGranted += OnReward;
     void OnDisable() => GameEvents.RewardGranted -= OnReward;
@@ -29,9 +28,9 @@ public class OfflineEarnings : MonoBehaviour
     public static void StampNow()
     {
         double now = IdleEngine.Now();
-        double max = Math.Max(now, GetD(MaxKey));
-        PlayerPrefs.SetString(LastKey, now.ToString("R"));
-        PlayerPrefs.SetString(MaxKey, max.ToString("R"));
+        double max = System.Math.Max(now, GetD(MaxKey));
+        PlayerPrefs.SetString(LastKey, OfflineCalc.FormatStamp(now));
+        PlayerPrefs.SetString(MaxKey, OfflineCalc.FormatStamp(max));
     }
 
     void Compute()
@@ -41,53 +40,41 @@ public class OfflineEarnings : MonoBehaviour
         double last = GetD(LastKey);
         double max = GetD(MaxKey);
         StampNow();
-        if (last <= 0) return;                     // first launch
 
-        // Clock rolled back below the highest-ever seen time -> award nothing.
-        if (now < last || now < max) { Debug.LogWarning("[Offline] Clock rollback detected"); return; }
+        var result = OfflineCalc.Compute(now, last, max, IdleEngine.I.BaseIncomePerSec,
+            maxOfflineHours, offlineEfficiency, minAwaySeconds);
+        if (result.Rollback) { Debug.LogWarning("[Offline] Clock rollback detected"); return; }
+        if (result.Amount <= 0) return;
 
-        // Measure from the high-water mark, never from a lower stamp.
-        double away = now - Math.Max(last, max);
-        if (away < minAwaySeconds) return;
-
-        AwaySeconds = Math.Min(away, maxOfflineHours * 3600);
-        PendingAmount = IdleEngine.I.BaseIncomePerSec * AwaySeconds * offlineEfficiency;
-        doubled = false;
-        if (PendingAmount <= 0) return;
-
+        claim.Offer(result.Amount, result.Seconds);
         // Show popup: "You earned X while away" [Collect] [Watch ad: x2]
-        GameEvents.RaiseOffline(PendingAmount, AwaySeconds);
+        GameEvents.RaiseOffline(result.Amount, result.Seconds);
     }
 
     /// <summary>UI "Collect" button (no ad).</summary>
-    public void Collect()
-    {
-        if (PendingAmount <= 0) return;
-        IdleEngine.I.AddOffline(PendingAmount);
-        PendingAmount = 0;
-        IdleEngine.I.Save();
-    }
+    public void Collect() => Credit(claim.Collect());
 
     void OnReward(RewardType t)
     {
-        if (t != RewardType.OfflineDouble || PendingAmount <= 0 || doubled) return;
-        doubled = true;
-        PendingAmount *= 2;
-        Collect();
+        if (t == RewardType.OfflineDouble) Credit(claim.CollectDoubled());
+    }
+
+    void Credit(double amount)
+    {
+        if (amount <= 0) return;
+        IdleEngine.I.AddOffline(amount);
+        IdleEngine.I.Save();
     }
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
     /// <summary>IC-04 debug: pretend the player was away. Moves both stamps back, then runs the normal resume path.</summary>
     public void DebugSkip(double seconds)
     {
-        var inv = System.Globalization.CultureInfo.InvariantCulture;
-        PlayerPrefs.SetString(LastKey, (GetD(LastKey) - seconds).ToString("R", inv));
-        PlayerPrefs.SetString(MaxKey, (GetD(MaxKey) - seconds).ToString("R", inv));
+        PlayerPrefs.SetString(LastKey, OfflineCalc.FormatStamp(GetD(LastKey) - seconds));
+        PlayerPrefs.SetString(MaxKey, OfflineCalc.FormatStamp(GetD(MaxKey) - seconds));
         Compute();
     }
 #endif
 
-    static double GetD(string key) =>
-        double.TryParse(PlayerPrefs.GetString(key, "0"), System.Globalization.NumberStyles.Float,
-                        System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : 0;
+    static double GetD(string key) => OfflineCalc.ParseStamp(PlayerPrefs.GetString(key, "0"));
 }
