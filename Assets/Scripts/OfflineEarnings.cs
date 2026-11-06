@@ -76,6 +76,17 @@ public class OfflineEarnings : MonoBehaviour
         Collect();
     }
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+    /// <summary>IC-04 debug: pretend the player was away. Moves both stamps back, then runs the normal resume path.</summary>
+    public void DebugSkip(double seconds)
+    {
+        var inv = System.Globalization.CultureInfo.InvariantCulture;
+        PlayerPrefs.SetString(LastKey, (GetD(LastKey) - seconds).ToString("R", inv));
+        PlayerPrefs.SetString(MaxKey, (GetD(MaxKey) - seconds).ToString("R", inv));
+        Compute();
+    }
+#endif
+
     static double GetD(string key) =>
         double.TryParse(PlayerPrefs.GetString(key, "0"), System.Globalization.NumberStyles.Float,
                         System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : 0;

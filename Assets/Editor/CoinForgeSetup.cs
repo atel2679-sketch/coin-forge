@@ -45,6 +45,7 @@ public static class CoinForgeSetup
         PlayerSettings.Android.targetSdkVersion = AndroidSdkVersions.AndroidApiLevelAuto; // highest installed SDK
         PlayerSettings.defaultInterfaceOrientation = UIOrientation.Portrait;
         PlayerSettings.runInBackground = false;
+        PlayerSettings.enableFrameTimingStats = true; // IC-04: CPU/GPU frame times for the perf probe
         EditorUserBuildSettings.androidBuildType = AndroidBuildType.Debug;
         EditorUserBuildSettings.buildAppBundle = false;
     }
@@ -116,17 +117,27 @@ public static class CoinForgeSetup
     }
 
     // CLI: Unity -batchmode -quit -executeMethod CoinForgeSetup.BuildDebugApk
-    public static void BuildDebugApk()
+    public static void BuildDebugApk() => Build("Builds/CoinForge-debug.apk", BuildOptions.Development, AndroidBuildType.Debug);
+
+    // IC-04: release-configuration APK (debug-signed) to verify dev-only code is stripped.
+    // CLI: Unity -batchmode -quit -executeMethod CoinForgeSetup.BuildReleaseApk
+    public static void BuildReleaseApk() => Build("Builds/CoinForge-release.apk", BuildOptions.None, AndroidBuildType.Release);
+
+    static void Build(string path, BuildOptions options, AndroidBuildType type)
     {
-        RunAll();
+        // IC-04: don't regenerate Main.unity on every build (it churned fileIDs); create it only if missing.
+        ApplyPlayerSettings();
+        if (!File.Exists(ScenePath)) CreateMainScene();
+        ApplyAdMobAppId();
+        EditorUserBuildSettings.androidBuildType = type;
         ResolveAndroidDeps();
         Directory.CreateDirectory("Builds");
         var rep = BuildPipeline.BuildPlayer(new BuildPlayerOptions
         {
             scenes = new[] { ScenePath },
-            locationPathName = "Builds/CoinForge-debug.apk",
+            locationPathName = path,
             target = BuildTarget.Android,
-            options = BuildOptions.Development
+            options = options
         });
         if (rep.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded)
             EditorApplication.Exit(1);

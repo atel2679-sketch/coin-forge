@@ -135,6 +135,9 @@ public class IdleEngine : MonoBehaviour
 
     public void Save()
     {
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        if (DebugSaveBlocked) return;
+#endif
         var d = new SaveData { coins = Coins, lifetime = Lifetime, boostEnd = BoostEndUtc, gems = Gems, owned = Upgrades.Owned };
         PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(d));
         OfflineEarnings.StampNow();
@@ -150,6 +153,18 @@ public class IdleEngine : MonoBehaviour
         Coins = d.coins; Lifetime = d.lifetime; Gems = d.gems; BoostEndUtc = d.boostEnd;
         Upgrades = new UpgradeSystem(defs, d.owned);
     }
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+    // ---------- IC-04 debug hooks (compiled out of release builds) ----------
+    public static bool DebugSaveBlocked;
+
+    public void DebugAddCoins(double amount)
+    {
+        Add(amount);
+        Save();
+        GameEvents.RaiseCoins(Coins);
+    }
+#endif
 
     void OnApplicationPause(bool paused) { if (paused) Save(); }
     void OnApplicationQuit() => Save();
