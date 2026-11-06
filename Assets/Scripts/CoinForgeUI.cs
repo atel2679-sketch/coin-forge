@@ -147,8 +147,10 @@ public sealed partial class CoinForgeUI : MonoBehaviour
 
     void RefreshAdControls()
     {
-        bool ready = !adInFlight && AdManager.I != null && AdManager.I.RewardedReady;
-        SetAvailable(boostAd, ready);
+        bool previewBoost = tutorialStep == TutorialSteps;
+        bool ready = !InTutorial && !adInFlight && AdManager.I != null && AdManager.I.RewardedReady;
+        SetAvailable(boostAd, ready, previewBoost);
+        Set(boostAdStatus, ready || previewBoost ? "Watch ad" : "Loading…");
         SetAvailable(warpAd, ready);
         SetAvailable(offlineAd, ready);
         SetAvailable(offlineCollect, !adInFlight);
@@ -182,7 +184,6 @@ public sealed partial class CoinForgeUI : MonoBehaviour
         }
 
         RefreshAdControls();
-        Set(boostAdStatus, boostAd.interactable ? "Watch ad" : "Loading…");
         bool warp = CanTimeWarp();
         warpAd.gameObject.SetActive(warp);
         if (warp)

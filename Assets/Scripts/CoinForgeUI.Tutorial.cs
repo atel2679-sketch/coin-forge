@@ -140,6 +140,7 @@ public sealed partial class CoinForgeUI
     void SetTutorialStep(int step)
     {
         tutorialStep = step;
+        RefreshAdControls();
         Set(tutorialStepText, "STEP " + BigNum.Format(step) + " OF " + BigNum.Format(TutorialSteps));
         Set(tutorialMessage, step switch
         {

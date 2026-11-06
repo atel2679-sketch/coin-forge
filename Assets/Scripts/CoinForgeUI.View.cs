@@ -108,7 +108,8 @@ public sealed partial class CoinForgeUI
         Place(Art(badge, "ic_boost2x.png").rectTransform, 9, 18, 60, 58);
         boostState = Label(badge, "", 35, Gold, TextAnchor.MiddleLeft);
         Place(boostState.rectTransform, 72, 0, 258, 95);
-        helpLink = (RectTransform)DialogButton(hud, "?", null, 0, 0, 138, OpenHelp).transform;
+        helpLink = (RectTransform)ActionButton(hud, "?", null, OpenHelp).transform;
+        Label(helpLink, "?", 66, Gold);
     }
 
     void BuildStage()
@@ -133,6 +134,9 @@ public sealed partial class CoinForgeUI
         Place(Label(adRail, "AD REWARDS", 35, Muted).rectTransform, 0, 0, 388, 58);
         boostAd = BuildAd(adRail, "Boost ad", "ic_boost2x.png", "2x Boost · 2h", out boostAdStatus,
             () => ShowAd(RewardType.Boost2x));
+        var boostColors = boostAd.colors;
+        boostColors.disabledColor = Color.white;
+        boostAd.colors = boostColors;
         warpAd = BuildAd(adRail, "Time Warp ad", "ic_timewarp.png", "Time Warp +4h", out warpAdStatus,
             () => ShowAd(RewardType.TimeWarp));
         BuildTapEffects(stage, coin.rectTransform);
@@ -461,10 +465,10 @@ public sealed partial class CoinForgeUI
         return label;
     }
 
-    void SetAvailable(Button button, bool available)
+    void SetAvailable(Button button, bool available, bool showActiveFace = false)
     {
         button.interactable = available;
-        if (disabledFaces.TryGetValue(button, out var face)) face.enabled = !available;
+        if (disabledFaces.TryGetValue(button, out var face)) face.enabled = !available && !showActiveFace;
     }
 
     Button ActionButton(Transform parent, string name, string sprite, UnityAction action, bool canDisable = false)
