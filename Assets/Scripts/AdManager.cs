@@ -35,7 +35,28 @@ public class AdManager : MonoBehaviour
     readonly RewardFlow rewardFlow = new RewardFlow();
     AdPacing pacing;
 
-    public bool RewardedReady => rewarded != null && rewarded.CanShowAd();
+    // IC-04 perf: CanShowAd() and GetHeightInPixels() are JNI calls into the plugin; GetHeightInPixels waits on the
+    // Android UI thread (busy with the banner WebView), costing ~50 ms. The UI polls both at 10 Hz (and the tutorial
+    // every frame), which caused the P95 spikes. Both are now cached; the banner height only changes when it loads.
+    const float ReadyRecheckSeconds = 30f;   // a 1 s recheck still showed ~14 ms spikes every second
+    bool readyCache;
+    float readyCheckedAt = float.NegativeInfinity;
+    float bannerHeightPx;
+
+    public bool RewardedReady
+    {
+        get
+        {
+            if (rewarded == null) return false;
+            float t = Time.unscaledTime;
+            if (t - readyCheckedAt >= ReadyRecheckSeconds)
+            {
+                readyCache = rewarded.CanShowAd();   // ads expire after ~1 h; re-validate every 30 s (taps re-check fresh)
+                readyCheckedAt = t;
+            }
+            return readyCache;
+        }
+    }
     public bool TimeWarpReady => RewardedReady && Pacing.TimeWarpOffCooldown;
     AdPacing Pacing => pacing ??= new AdPacing(GameClock.Current)
     {
@@ -44,7 +65,7 @@ public class AdManager : MonoBehaviour
         AfterRewardedGrace = afterRewardedGrace,
         TimeWarpCooldown = timeWarpCooldown
     };
-    public float BannerHeightPx => banner != null ? banner.GetHeightInPixels() : 0;
+    public float BannerHeightPx => banner != null ? bannerHeightPx : 0;
 
     void Awake()
     {
@@ -219,6 +240,7 @@ public class AdManager : MonoBehaviour
                 return;
             }
             rewarded = ad;
+            readyCheckedAt = float.NegativeInfinity;   // new ad: validate on next read
             ad.OnAdFullScreenContentClosed += () => OnMain(OnRewardedClosed);
             ad.OnAdFullScreenContentFailed += e => OnMain(() => { Debug.LogWarning($"[Ads] Rewarded show failed: {e}"); LoadRewarded(); });
             GameEvents.RaiseRewardedReady(true);
@@ -228,7 +250,7 @@ public class AdManager : MonoBehaviour
     /// <summary>Called by UI buttons: Boost2x, TimeWarp, OfflineDouble.</summary>
     public bool ShowRewarded(RewardType type)
     {
-        if (!RewardedReady) return false;
+        if (rewarded == null || !rewarded.CanShowAd()) return false;   // fresh check on the user's tap
         if (type == RewardType.TimeWarp && !TimeWarpReady) return false;
 
         rewardFlow.Begin(type);
@@ -280,7 +302,12 @@ public class AdManager : MonoBehaviour
         banner?.Destroy();
         AdSize size = AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(AdSize.FullWidth);
         banner = new BannerView(bannerId, size, AdPosition.Bottom);
-        banner.OnBannerAdLoaded += () => OnMain(() => Debug.Log($"[Ads] Banner height px: {BannerHeightPx}"));
+        bannerHeightPx = 0;
+        banner.OnBannerAdLoaded += () => OnMain(() =>
+        {
+            bannerHeightPx = banner.GetHeightInPixels();   // read once per load, not per UI refresh
+            Debug.Log($"[Ads] Banner height px: {bannerHeightPx}");
+        });
         banner.OnBannerAdLoadFailed += e => OnMain(() => Debug.LogWarning($"[Ads] Banner load failed: {e}"));
         banner.LoadAd(new AdRequest());
     }

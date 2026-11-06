@@ -1,7 +1,6 @@
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
@@ -54,8 +53,10 @@ public sealed class CoinForgeDebugPanel : MonoBehaviour
             foreach (var text in FindObjectsByType<Text>(FindObjectsSortMode.None))
             {
                 if (text.text != TitleText) continue;
-                text.raycastTarget = true;
-                text.gameObject.AddComponent<HoldToOpen>();
+                // Polls touches against the title's screen rect instead of relying on EventSystem raycasts
+                // (the title sits on a nested HUD canvas and did not receive pointer events reliably).
+                var watcher = gameObject.AddComponent<HoldToOpen>();
+                watcher.Title = text.rectTransform;
                 Debug.Log("[Debug] Panel armed on HUD title (hold 3 s)");
                 yield break;
             }
@@ -64,7 +65,24 @@ public sealed class CoinForgeDebugPanel : MonoBehaviour
         Debug.LogWarning("[Debug] HUD title not found; panel unavailable");
     }
 
-    public void Open() { status = EeaState(); enabled = true; }
+    UnityEngine.EventSystems.EventSystem blockedInput;
+
+    public void Open()
+    {
+        status = EeaState();
+        enabled = true;
+        // IMGUI does not block uGUI raycasts: stop the game UI from receiving the same taps while open.
+        blockedInput = UnityEngine.EventSystems.EventSystem.current;
+        if (blockedInput != null) blockedInput.enabled = false;
+        Debug.Log("[Debug] Panel opened");
+    }
+
+    public void Close()
+    {
+        enabled = false;
+        if (blockedInput != null) blockedInput.enabled = true;
+        blockedInput = null;
+    }
 
     static string EeaState() => "Consent EEA test: " + (PlayerPrefs.GetInt(AdManager.DebugEeaKey, 0) == 1 ? "ON" : "OFF");
 
@@ -74,7 +92,6 @@ public sealed class CoinForgeDebugPanel : MonoBehaviour
         PlayerPrefs.Save();
         Debug.Log("[Debug] " + EeaState() + " (restart the app)");
     }
-    public void Close() => enabled = false;
 
     void OnGUI()
     {
@@ -121,24 +138,28 @@ public sealed class CoinForgeDebugPanel : MonoBehaviour
 #endif
     }
 
-    /// <summary>Long-press detector placed on the HUD title.</summary>
-    sealed class HoldToOpen : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
+    /// <summary>Long-press detector for the HUD title (polls input; a few comparisons per frame, dev builds only).</summary>
+    sealed class HoldToOpen : MonoBehaviour
     {
+        public RectTransform Title;
         float pressedAt = -1;
-
-        void Awake() => enabled = false;       // Update only runs while a finger is down
-
-        public void OnPointerDown(PointerEventData e) { pressedAt = Time.unscaledTime; enabled = true; }
-        public void OnPointerUp(PointerEventData e) => Cancel();
-        public void OnPointerExit(PointerEventData e) => Cancel();
-
-        void Cancel() { pressedAt = -1; enabled = false; }
 
         void Update()
         {
-            if (pressedAt < 0 || Time.unscaledTime - pressedAt < HoldSeconds) return;
-            Cancel();
-            I.Open();
+            bool down = Input.touchCount > 0 || Input.GetMouseButton(0);
+            Vector2 pos = Input.touchCount > 0 ? Input.GetTouch(0).position : (Vector2)Input.mousePosition;
+            if (!down || I.enabled || Title == null || !Title.gameObject.activeInHierarchy
+                || !RectTransformUtility.RectangleContainsScreenPoint(Title, pos, null))
+            {
+                pressedAt = -1;
+                return;
+            }
+            if (pressedAt < 0) pressedAt = Time.unscaledTime;
+            else if (Time.unscaledTime - pressedAt >= HoldSeconds)
+            {
+                pressedAt = -1;
+                I.Open();
+            }
         }
     }
 }
