@@ -142,8 +142,9 @@ public sealed partial class CoinForgeUI : MonoBehaviour
         RefreshAdControls();
     }
 
-    bool CanTimeWarp() => AdManager.I != null && AdManager.I.TimeWarpReady
-        && IdleEngine.I.SecondsToNextPurchase() > 180;
+    // IC-04b: rewarded ready, cooldown over, base income > 0 and next goal more than 3 min away.
+    bool CanTimeWarp() => AdManager.I != null
+        && IdleEngine.I.ShouldOfferTimeWarp(AdManager.I.RewardedReady, AdManager.I.TimeWarpReady);
 
     void RefreshAdControls()
     {

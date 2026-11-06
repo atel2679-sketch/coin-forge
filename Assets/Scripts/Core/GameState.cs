@@ -73,6 +73,32 @@ public sealed class GameState
     /// <summary>Time Warp pays base income (no ad boost, so ads don't double-dip).</summary>
     public double TimeWarpReward(double hours) => BaseIncome * hours * 3600;
 
+    // ---------- Next goal (IC-04b) ----------
+    /// <summary>
+    /// The player's next goal: the first unit of the lowest-index building not owned yet;
+    /// once every building is owned, the next unit of the most expensive (last) building.
+    /// </summary>
+    public double NextGoalCost
+    {
+        get
+        {
+            var owned = Upgrades.Owned;
+            for (int i = 0; i < owned.Length; i++)
+                if (owned[i] == 0) return Upgrades.CostOf(i);
+            return Upgrades.CostOf(owned.Length - 1);
+        }
+    }
+
+    /// <summary>Seconds of base income until <see cref="NextGoalCost"/>: 0 if affordable, MaxValue with no income.</summary>
+    public double SecondsToNextGoal()
+    {
+        double target = NextGoalCost;
+        if (Coins >= target) return 0;
+        double income = BaseIncome;
+        if (income <= 0) return double.MaxValue;
+        return (target - Coins) / income;
+    }
+
     // ---------- Prestige ----------
     public static int GemsFor(double lifetime) =>
         lifetime > 0 && !double.IsInfinity(lifetime) ? (int)Math.Floor(Math.Sqrt(lifetime / GemDivisor)) : 0;

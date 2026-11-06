@@ -80,15 +80,15 @@ public class IdleEngine : MonoBehaviour
 
     public bool BuyMax(int index) => Buy(index, state.MaxAffordable(index));
 
-    /// <summary>Seconds until the cheapest next building is affordable (for Time Warp prompt).</summary>
-    public double SecondsToNextPurchase()
-    {
-        double cheapest = double.MaxValue;
-        for (int i = 0; i < Upgrades.Defs.Length; i++) cheapest = Math.Min(cheapest, Upgrades.CostOf(i));
-        if (Coins >= cheapest) return 0;
-        double inc = IncomePerSec;
-        return inc <= 0 ? double.MaxValue : (cheapest - Coins) / inc;
-    }
+    /// <summary>
+    /// IC-04b: seconds of base income until the next goal (first unowned tier, or the top tier once all are owned).
+    /// Replaces SecondsToNextPurchase, which used the cheapest building and so almost never exceeded 3 minutes.
+    /// </summary>
+    public double SecondsToNextGoal() => state.SecondsToNextGoal();
+
+    /// <summary>Whether the Time Warp button should be offered (see <see cref="TimeWarpRule"/>).</summary>
+    public bool ShouldOfferTimeWarp(bool rewardedReady, bool timeWarpReady) =>
+        TimeWarpRule.ShouldShow(rewardedReady, timeWarpReady, state, timeWarpHours);
 
     public int PendingGems() => state.PendingGems;
 

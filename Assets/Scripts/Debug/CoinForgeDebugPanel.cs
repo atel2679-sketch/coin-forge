@@ -23,7 +23,7 @@ public sealed class CoinForgeDebugPanel : MonoBehaviour
         ("+1e9 coins", () => IdleEngine.I.DebugAddCoins(1e9)),
         ("+1e12 coins", () => IdleEngine.I.DebugAddCoins(1e12)),
         ("Skip time +1 hour (offline)", () => FindFirstObjectByType<OfflineEarnings>().DebugSkip(3600)),
-        ("Reset save (closes app)", ResetSave),
+        ("Reset save (closes app in 3 s)", ResetSave),
         ("Consent: toggle EEA test geography", ToggleEea),
         ("Consent: reset (applies on restart)", AdManager.DebugResetConsent),
         (PerfLabel, () => CoinForgePerfProbe.Begin(60)),
@@ -121,11 +121,19 @@ public sealed class CoinForgeDebugPanel : MonoBehaviour
         }
     }
 
-    static void ResetSave()
+    static void ResetSave() => I.StartCoroutine(I.ResetSaveRoutine());
+
+    System.Collections.IEnumerator ResetSaveRoutine()
     {
         IdleEngine.DebugSaveBlocked = true;    // nothing may write the old state back
         PlayerPrefs.DeleteAll();
         PlayerPrefs.Save();
+        // Android writes PlayerPrefs asynchronously (SharedPreferences.apply). Killing the process right away lost
+        // the wipe (IC-04b fix). Wait for the write, wipe once more in case the UI saved its play-time key, wait again.
+        yield return new WaitForSecondsRealtime(1.5f);
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+        yield return new WaitForSecondsRealtime(1.5f);
         Debug.Log("[Debug] Save wiped; closing app");
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
