@@ -63,3 +63,17 @@ If T4 should hit 8–10 min with the bot's profile, only Foundry's **cost** matt
 | 3.25e4 (×2.5) | 9:00 |
 
 Not changed here; a PM call for the next pass.
+
+## IC-05b · Foundry cost 1.3e4 → 2.6e4
+
+PM decision. Other values unchanged. EditMode tests 56/56. Simulation (same saver policy, table read from `UpgradeSystem.cs`, from first tap):
+
+| Tap profile | T2 | T3 | T4 | T5 |
+|---|---|---|---|---|
+| Bot profile (3/s → 2/s → 1/s) | 0:38 | 2:42 | **8:09** | 15:03 |
+| Constant 0.5/s | 1:58 | 4:22 | 9:59 | 17:02 |
+| Constant 1/s | 1:22 | 3:39 | 9:07 | 16:01 |
+| Constant 2/s | 0:52 | 2:57 | 8:11 | 14:45 |
+| Constant 3/s | 0:38 | 2:31 | 7:29 | 13:46 |
+
+T4 with the bot profile is inside the 7:30–10:00 window, so no device re-test was run. Only a player tapping a constant 3/s for the whole session lands 1 s under 7:30.

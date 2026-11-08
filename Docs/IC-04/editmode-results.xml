@@ -1,367 +1,367 @@
 <?xml version="1.0" encoding="utf-8"?>
-<test-run id="2" testcasecount="56" result="Passed" total="56" passed="56" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.1459762">
-  <test-suite type="TestSuite" id="1000" name="CoinForge" fullname="CoinForge" runstate="Runnable" testcasecount="56" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.145976" total="56" passed="56" failed="0" inconclusive="0" skipped="0" asserts="0">
+<test-run id="2" testcasecount="56" result="Passed" total="56" passed="56" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.1368519">
+  <test-suite type="TestSuite" id="1000" name="CoinForge" fullname="CoinForge" runstate="Runnable" testcasecount="56" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.136852" total="56" passed="56" failed="0" inconclusive="0" skipped="0" asserts="0">
     <properties>
       <property name="platform" value="EditMode" />
     </properties>
-    <test-suite type="Assembly" id="1064" name="CoinForge.Tests.EditMode.dll" fullname="F:/Project Aplikasi/Idleclicker/Library/ScriptAssemblies/CoinForge.Tests.EditMode.dll" runstate="Runnable" testcasecount="56" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.134671" total="56" passed="56" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <test-suite type="Assembly" id="1064" name="CoinForge.Tests.EditMode.dll" fullname="F:/Project Aplikasi/Idleclicker/Library/ScriptAssemblies/CoinForge.Tests.EditMode.dll" runstate="Runnable" testcasecount="56" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.126122" total="56" passed="56" failed="0" inconclusive="0" skipped="0" asserts="0">
       <properties>
-        <property name="_PID" value="23268" />
+        <property name="_PID" value="28212" />
         <property name="_APPDOMAIN" value="Unity Child Domain" />
         <property name="platform" value="EditMode" />
         <property name="EditorOnly" value="True" />
       </properties>
-      <test-suite type="TestFixture" id="1001" name="BoostAndTimeWarpTests" fullname="BoostAndTimeWarpTests" classname="BoostAndTimeWarpTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.053708" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <test-suite type="TestFixture" id="1001" name="BoostAndTimeWarpTests" fullname="BoostAndTimeWarpTests" classname="BoostAndTimeWarpTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.049326" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
         <properties />
-        <test-case id="1004" name="BoostCap_IsMeasuredFromNow" fullname="BoostAndTimeWarpTests.BoostCap_IsMeasuredFromNow" methodname="BoostCap_IsMeasuredFromNow" classname="BoostAndTimeWarpTests" runstate="Runnable" seed="1440462102" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.026803" asserts="0">
+        <test-case id="1004" name="BoostCap_IsMeasuredFromNow" fullname="BoostAndTimeWarpTests.BoostCap_IsMeasuredFromNow" methodname="BoostCap_IsMeasuredFromNow" classname="BoostAndTimeWarpTests" runstate="Runnable" seed="139014401" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.024244" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1005" name="BoostDoublesIncome" fullname="BoostAndTimeWarpTests.BoostDoublesIncome" methodname="BoostDoublesIncome" classname="BoostAndTimeWarpTests" runstate="Runnable" seed="914465333" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000732" asserts="0">
+        <test-case id="1005" name="BoostDoublesIncome" fullname="BoostAndTimeWarpTests.BoostDoublesIncome" methodname="BoostDoublesIncome" classname="BoostAndTimeWarpTests" runstate="Runnable" seed="1534891724" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000672" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1003" name="BoostStacks_TwoHoursPerAd" fullname="BoostAndTimeWarpTests.BoostStacks_TwoHoursPerAd" methodname="BoostStacks_TwoHoursPerAd" classname="BoostAndTimeWarpTests" runstate="Runnable" seed="1116107090" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000260" asserts="0">
+        <test-case id="1003" name="BoostStacks_TwoHoursPerAd" fullname="BoostAndTimeWarpTests.BoostStacks_TwoHoursPerAd" methodname="BoostStacks_TwoHoursPerAd" classname="BoostAndTimeWarpTests" runstate="Runnable" seed="1540370766" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000279" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1002" name="FiveBoosts_CapAtEightHours" fullname="BoostAndTimeWarpTests.FiveBoosts_CapAtEightHours" methodname="FiveBoosts_CapAtEightHours" classname="BoostAndTimeWarpTests" runstate="Runnable" seed="51385138" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000226" asserts="0">
+        <test-case id="1002" name="FiveBoosts_CapAtEightHours" fullname="BoostAndTimeWarpTests.FiveBoosts_CapAtEightHours" methodname="FiveBoosts_CapAtEightHours" classname="BoostAndTimeWarpTests" runstate="Runnable" seed="397520682" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000248" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1008" name="Interstitial_GraceCooldownAndAfterRewarded" fullname="BoostAndTimeWarpTests.Interstitial_GraceCooldownAndAfterRewarded" methodname="Interstitial_GraceCooldownAndAfterRewarded" classname="BoostAndTimeWarpTests" runstate="Runnable" seed="200377366" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.001266" asserts="0">
+        <test-case id="1008" name="Interstitial_GraceCooldownAndAfterRewarded" fullname="BoostAndTimeWarpTests.Interstitial_GraceCooldownAndAfterRewarded" methodname="Interstitial_GraceCooldownAndAfterRewarded" classname="BoostAndTimeWarpTests" runstate="Runnable" seed="1492921433" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.001237" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1007" name="TimeWarp_CooldownRejectsSecondShowForTenMinutes" fullname="BoostAndTimeWarpTests.TimeWarp_CooldownRejectsSecondShowForTenMinutes" methodname="TimeWarp_CooldownRejectsSecondShowForTenMinutes" classname="BoostAndTimeWarpTests" runstate="Runnable" seed="1038220086" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000423" asserts="0">
+        <test-case id="1007" name="TimeWarp_CooldownRejectsSecondShowForTenMinutes" fullname="BoostAndTimeWarpTests.TimeWarp_CooldownRejectsSecondShowForTenMinutes" methodname="TimeWarp_CooldownRejectsSecondShowForTenMinutes" classname="BoostAndTimeWarpTests" runstate="Runnable" seed="1758059590" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000397" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1006" name="TimeWarp_PaysBaseIncomeTimesFourHours_EvenWhileBoosted" fullname="BoostAndTimeWarpTests.TimeWarp_PaysBaseIncomeTimesFourHours_EvenWhileBoosted" methodname="TimeWarp_PaysBaseIncomeTimesFourHours_EvenWhileBoosted" classname="BoostAndTimeWarpTests" runstate="Runnable" seed="892890185" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.004087" asserts="0">
+        <test-case id="1006" name="TimeWarp_PaysBaseIncomeTimesFourHours_EvenWhileBoosted" fullname="BoostAndTimeWarpTests.TimeWarp_PaysBaseIncomeTimesFourHours_EvenWhileBoosted" methodname="TimeWarp_PaysBaseIncomeTimesFourHours_EvenWhileBoosted" classname="BoostAndTimeWarpTests" runstate="Runnable" seed="397284603" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.003870" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
       </test-suite>
-      <test-suite type="TestFixture" id="1009" name="EconomyTests" fullname="EconomyTests" classname="EconomyTests" runstate="Runnable" testcasecount="23" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.058026" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <test-suite type="TestFixture" id="1009" name="EconomyTests" fullname="EconomyTests" classname="EconomyTests" runstate="Runnable" testcasecount="23" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.054641" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
         <properties />
-        <test-case id="1012" name="Buy_CannotAfford_SpendsNothing" fullname="EconomyTests.Buy_CannotAfford_SpendsNothing" methodname="Buy_CannotAfford_SpendsNothing" classname="EconomyTests" runstate="Runnable" seed="2132115230" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.002204" asserts="0">
+        <test-case id="1012" name="Buy_CannotAfford_SpendsNothing" fullname="EconomyTests.Buy_CannotAfford_SpendsNothing" methodname="Buy_CannotAfford_SpendsNothing" classname="EconomyTests" runstate="Runnable" seed="2064097656" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.001938" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1011" name="BuyMax_ExactlyEnoughCoins_BuysAll" fullname="EconomyTests.BuyMax_ExactlyEnoughCoins_BuysAll" methodname="BuyMax_ExactlyEnoughCoins_BuysAll" classname="EconomyTests" runstate="Runnable" seed="17793520" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.001972" asserts="0">
+        <test-case id="1011" name="BuyMax_ExactlyEnoughCoins_BuysAll" fullname="EconomyTests.BuyMax_ExactlyEnoughCoins_BuysAll" methodname="BuyMax_ExactlyEnoughCoins_BuysAll" classname="EconomyTests" runstate="Runnable" seed="178883982" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.001765" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1010" name="BuyMax_MatchesGeometricFormula_AndNeverGoesNegative" fullname="EconomyTests.BuyMax_MatchesGeometricFormula_AndNeverGoesNegative" methodname="BuyMax_MatchesGeometricFormula_AndNeverGoesNegative" classname="EconomyTests" runstate="Runnable" seed="385065618" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.036058" asserts="0">
+        <test-case id="1010" name="BuyMax_MatchesGeometricFormula_AndNeverGoesNegative" fullname="EconomyTests.BuyMax_MatchesGeometricFormula_AndNeverGoesNegative" methodname="BuyMax_MatchesGeometricFormula_AndNeverGoesNegative" classname="EconomyTests" runstate="Runnable" seed="804551042" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.033729" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-suite type="ParameterizedMethod" id="1030" name="CorruptOrEmptySave_StartsFreshWithoutThrowing" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.008258" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <test-suite type="ParameterizedMethod" id="1030" name="CorruptOrEmptySave_StartsFreshWithoutThrowing" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.008378" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
           <properties />
-          <test-case id="1022" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(null)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(null)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="5714463" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.004579" asserts="0">
+          <test-case id="1022" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(null)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(null)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="486057502" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.004651" asserts="0">
             <properties>
               <property name="retryIteration" value="0" />
               <property name="repeatIteration" value="0" />
             </properties>
           </test-case>
-          <test-case id="1023" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;&quot;)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;&quot;)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="1501062852" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000143" asserts="0">
+          <test-case id="1023" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;&quot;)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;&quot;)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="1941700490" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000146" asserts="0">
             <properties>
               <property name="retryIteration" value="0" />
               <property name="repeatIteration" value="0" />
             </properties>
           </test-case>
-          <test-case id="1024" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;   &quot;)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;   &quot;)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="1026966182" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000110" asserts="0">
+          <test-case id="1024" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;   &quot;)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;   &quot;)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="2087298969" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000122" asserts="0">
             <properties>
               <property name="retryIteration" value="0" />
               <property name="repeatIteration" value="0" />
             </properties>
           </test-case>
-          <test-case id="1025" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;{&quot;)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;{&quot;)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="715942108" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000506" asserts="0">
+          <test-case id="1025" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;{&quot;)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;{&quot;)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="1669816834" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000524" asserts="0">
             <properties>
               <property name="retryIteration" value="0" />
               <property name="repeatIteration" value="0" />
             </properties>
           </test-case>
-          <test-case id="1026" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;not json at all&quot;)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;not json at all&quot;)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="960819679" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000122" asserts="0">
+          <test-case id="1026" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;not json at all&quot;)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;not json at all&quot;)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="590636866" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000142" asserts="0">
             <properties>
               <property name="retryIteration" value="0" />
               <property name="repeatIteration" value="0" />
             </properties>
           </test-case>
-          <test-case id="1027" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;null&quot;)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;null&quot;)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="1078173815" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000118" asserts="0">
+          <test-case id="1027" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;null&quot;)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;null&quot;)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="1257528673" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000134" asserts="0">
             <properties>
               <property name="retryIteration" value="0" />
               <property name="repeatIteration" value="0" />
             </properties>
           </test-case>
-          <test-case id="1028" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;{\&quot;coins\&quot;:\&quot;abc\&quot;}&quot;)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;{\&quot;coins\&quot;:\&quot;abc\&quot;}&quot;)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="779739659" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000949" asserts="0">
+          <test-case id="1028" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;{\&quot;coins\&quot;:\&quot;abc\&quot;}&quot;)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;{\&quot;coins\&quot;:\&quot;abc\&quot;}&quot;)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="1575641024" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000910" asserts="0">
             <properties>
               <property name="retryIteration" value="0" />
               <property name="repeatIteration" value="0" />
             </properties>
           </test-case>
-          <test-case id="1029" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;[1,2,3]&quot;)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;[1,2,3]&quot;)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="2142220265" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000124" asserts="0">
+          <test-case id="1029" name="CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;[1,2,3]&quot;)" fullname="EconomyTests.CorruptOrEmptySave_StartsFreshWithoutThrowing(&quot;[1,2,3]&quot;)" methodname="CorruptOrEmptySave_StartsFreshWithoutThrowing" classname="EconomyTests" runstate="Runnable" seed="370641409" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000135" asserts="0">
             <properties>
               <property name="retryIteration" value="0" />
               <property name="repeatIteration" value="0" />
             </properties>
           </test-case>
         </test-suite>
-        <test-case id="1013" name="Cost_IsBaseTimesRateToTheN" fullname="EconomyTests.Cost_IsBaseTimesRateToTheN" methodname="Cost_IsBaseTimesRateToTheN" classname="EconomyTests" runstate="Runnable" seed="349004744" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000277" asserts="0">
+        <test-case id="1013" name="Cost_IsBaseTimesRateToTheN" fullname="EconomyTests.Cost_IsBaseTimesRateToTheN" methodname="Cost_IsBaseTimesRateToTheN" classname="EconomyTests" runstate="Runnable" seed="1647205663" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000208" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-suite type="ParameterizedMethod" id="1019" name="GemsFromLifetime" fullname="EconomyTests.GemsFromLifetime" classname="EconomyTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.001903" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <test-suite type="ParameterizedMethod" id="1019" name="GemsFromLifetime" fullname="EconomyTests.GemsFromLifetime" classname="EconomyTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.001510" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
           <properties />
-          <test-case id="1014" name="GemsFromLifetime(990000000.0d,0)" fullname="EconomyTests.GemsFromLifetime(990000000.0d,0)" methodname="GemsFromLifetime" classname="EconomyTests" runstate="Runnable" seed="1139126553" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000463" asserts="0">
+          <test-case id="1014" name="GemsFromLifetime(990000000.0d,0)" fullname="EconomyTests.GemsFromLifetime(990000000.0d,0)" methodname="GemsFromLifetime" classname="EconomyTests" runstate="Runnable" seed="2027468971" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000368" asserts="0">
             <properties>
               <property name="retryIteration" value="0" />
               <property name="repeatIteration" value="0" />
             </properties>
           </test-case>
-          <test-case id="1015" name="GemsFromLifetime(1000000000.0d,1)" fullname="EconomyTests.GemsFromLifetime(1000000000.0d,1)" methodname="GemsFromLifetime" classname="EconomyTests" runstate="Runnable" seed="369241569" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000103" asserts="0">
+          <test-case id="1015" name="GemsFromLifetime(1000000000.0d,1)" fullname="EconomyTests.GemsFromLifetime(1000000000.0d,1)" methodname="GemsFromLifetime" classname="EconomyTests" runstate="Runnable" seed="568746019" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000083" asserts="0">
             <properties>
               <property name="retryIteration" value="0" />
               <property name="repeatIteration" value="0" />
             </properties>
           </test-case>
-          <test-case id="1016" name="GemsFromLifetime(3990000000.0d,1)" fullname="EconomyTests.GemsFromLifetime(3990000000.0d,1)" methodname="GemsFromLifetime" classname="EconomyTests" runstate="Runnable" seed="139844362" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000075" asserts="0">
+          <test-case id="1016" name="GemsFromLifetime(3990000000.0d,1)" fullname="EconomyTests.GemsFromLifetime(3990000000.0d,1)" methodname="GemsFromLifetime" classname="EconomyTests" runstate="Runnable" seed="478774522" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000081" asserts="0">
             <properties>
               <property name="retryIteration" value="0" />
               <property name="repeatIteration" value="0" />
             </properties>
           </test-case>
-          <test-case id="1017" name="GemsFromLifetime(4000000000.0d,2)" fullname="EconomyTests.GemsFromLifetime(4000000000.0d,2)" methodname="GemsFromLifetime" classname="EconomyTests" runstate="Runnable" seed="488303139" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000072" asserts="0">
+          <test-case id="1017" name="GemsFromLifetime(4000000000.0d,2)" fullname="EconomyTests.GemsFromLifetime(4000000000.0d,2)" methodname="GemsFromLifetime" classname="EconomyTests" runstate="Runnable" seed="1121349735" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000077" asserts="0">
             <properties>
               <property name="retryIteration" value="0" />
               <property name="repeatIteration" value="0" />
             </properties>
           </test-case>
-          <test-case id="1018" name="GemsFromLifetime(9000000000.0d,3)" fullname="EconomyTests.GemsFromLifetime(9000000000.0d,3)" methodname="GemsFromLifetime" classname="EconomyTests" runstate="Runnable" seed="2048605773" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000071" asserts="0">
+          <test-case id="1018" name="GemsFromLifetime(9000000000.0d,3)" fullname="EconomyTests.GemsFromLifetime(9000000000.0d,3)" methodname="GemsFromLifetime" classname="EconomyTests" runstate="Runnable" seed="2072747764" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000079" asserts="0">
             <properties>
               <property name="retryIteration" value="0" />
               <property name="repeatIteration" value="0" />
             </properties>
           </test-case>
         </test-suite>
-        <test-case id="1032" name="LegacyIC01Save_LoadsWithoutVersion" fullname="EconomyTests.LegacyIC01Save_LoadsWithoutVersion" methodname="LegacyIC01Save_LoadsWithoutVersion" classname="EconomyTests" runstate="Runnable" seed="380879901" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000370" asserts="0">
+        <test-case id="1032" name="LegacyIC01Save_LoadsWithoutVersion" fullname="EconomyTests.LegacyIC01Save_LoadsWithoutVersion" methodname="LegacyIC01Save_LoadsWithoutVersion" classname="EconomyTests" runstate="Runnable" seed="1460308627" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000334" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1021" name="Prestige_KeepsBoost" fullname="EconomyTests.Prestige_KeepsBoost" methodname="Prestige_KeepsBoost" classname="EconomyTests" runstate="Runnable" seed="1316634384" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000375" asserts="0">
+        <test-case id="1021" name="Prestige_KeepsBoost" fullname="EconomyTests.Prestige_KeepsBoost" methodname="Prestige_KeepsBoost" classname="EconomyTests" runstate="Runnable" seed="1981861084" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000334" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1020" name="Prestige_ResetsCoinsAndBuildings_KeepsGemsAndMultiplier" fullname="EconomyTests.Prestige_ResetsCoinsAndBuildings_KeepsGemsAndMultiplier" methodname="Prestige_ResetsCoinsAndBuildings_KeepsGemsAndMultiplier" classname="EconomyTests" runstate="Runnable" seed="1431483104" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.001147" asserts="0">
+        <test-case id="1020" name="Prestige_ResetsCoinsAndBuildings_KeepsGemsAndMultiplier" fullname="EconomyTests.Prestige_ResetsCoinsAndBuildings_KeepsGemsAndMultiplier" methodname="Prestige_ResetsCoinsAndBuildings_KeepsGemsAndMultiplier" classname="EconomyTests" runstate="Runnable" seed="530457621" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.001050" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1031" name="Save_RoundTrips_WithSaveVersion" fullname="EconomyTests.Save_RoundTrips_WithSaveVersion" methodname="Save_RoundTrips_WithSaveVersion" classname="EconomyTests" runstate="Runnable" seed="904400212" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.001634" asserts="0">
+        <test-case id="1031" name="Save_RoundTrips_WithSaveVersion" fullname="EconomyTests.Save_RoundTrips_WithSaveVersion" methodname="Save_RoundTrips_WithSaveVersion" classname="EconomyTests" runstate="Runnable" seed="2032369376" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.001736" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1033" name="SaveWithBadValues_IsSanitized" fullname="EconomyTests.SaveWithBadValues_IsSanitized" methodname="SaveWithBadValues_IsSanitized" classname="EconomyTests" runstate="Runnable" seed="1784468393" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000301" asserts="0">
+        <test-case id="1033" name="SaveWithBadValues_IsSanitized" fullname="EconomyTests.SaveWithBadValues_IsSanitized" methodname="SaveWithBadValues_IsSanitized" classname="EconomyTests" runstate="Runnable" seed="1041719962" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000292" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1034" name="SaveWithWrongBuildingCount_ResetsBuildingsOnly" fullname="EconomyTests.SaveWithWrongBuildingCount_ResetsBuildingsOnly" methodname="SaveWithWrongBuildingCount_ResetsBuildingsOnly" classname="EconomyTests" runstate="Runnable" seed="1390731343" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000277" asserts="0">
-          <properties>
-            <property name="retryIteration" value="0" />
-            <property name="repeatIteration" value="0" />
-          </properties>
-        </test-case>
-      </test-suite>
-      <test-suite type="TestFixture" id="1035" name="OfflineTests" fullname="OfflineTests" classname="OfflineTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.010330" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
-        <properties />
-        <test-case id="1039" name="CappedAtEightHours" fullname="OfflineTests.CappedAtEightHours" methodname="CappedAtEightHours" classname="OfflineTests" runstate="Runnable" seed="1192658182" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000920" asserts="0">
-          <properties>
-            <property name="retryIteration" value="0" />
-            <property name="repeatIteration" value="0" />
-          </properties>
-        </test-case>
-        <test-case id="1036" name="ClockRolledBack_PaysZero" fullname="OfflineTests.ClockRolledBack_PaysZero" methodname="ClockRolledBack_PaysZero" classname="OfflineTests" runstate="Runnable" seed="1473698823" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000196" asserts="0">
-          <properties>
-            <property name="retryIteration" value="0" />
-            <property name="repeatIteration" value="0" />
-          </properties>
-        </test-case>
-        <test-case id="1040" name="EfficiencyIsFiftyPercent" fullname="OfflineTests.EfficiencyIsFiftyPercent" methodname="EfficiencyIsFiftyPercent" classname="OfflineTests" runstate="Runnable" seed="556501834" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000147" asserts="0">
-          <properties>
-            <property name="retryIteration" value="0" />
-            <property name="repeatIteration" value="0" />
-          </properties>
-        </test-case>
-        <test-case id="1043" name="OfflineDouble_AfterCollect_PaysNothing" fullname="OfflineTests.OfflineDouble_AfterCollect_PaysNothing" methodname="OfflineDouble_AfterCollect_PaysNothing" classname="OfflineTests" runstate="Runnable" seed="585948731" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000473" asserts="0">
-          <properties>
-            <property name="retryIteration" value="0" />
-            <property name="repeatIteration" value="0" />
-          </properties>
-        </test-case>
-        <test-case id="1042" name="OfflineDouble_OnlyOnce" fullname="OfflineTests.OfflineDouble_OnlyOnce" methodname="OfflineDouble_OnlyOnce" classname="OfflineTests" runstate="Runnable" seed="237034028" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000215" asserts="0">
-          <properties>
-            <property name="retryIteration" value="0" />
-            <property name="repeatIteration" value="0" />
-          </properties>
-        </test-case>
-        <test-case id="1037" name="RollbackThenForward_MeasuresFromHighWaterMark" fullname="OfflineTests.RollbackThenForward_MeasuresFromHighWaterMark" methodname="RollbackThenForward_MeasuresFromHighWaterMark" classname="OfflineTests" runstate="Runnable" seed="264453293" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000159" asserts="0">
-          <properties>
-            <property name="retryIteration" value="0" />
-            <property name="repeatIteration" value="0" />
-          </properties>
-        </test-case>
-        <test-case id="1041" name="ShortAbsenceAndFirstLaunch_PayZero" fullname="OfflineTests.ShortAbsenceAndFirstLaunch_PayZero" methodname="ShortAbsenceAndFirstLaunch_PayZero" classname="OfflineTests" runstate="Runnable" seed="477933696" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000191" asserts="0">
-          <properties>
-            <property name="retryIteration" value="0" />
-            <property name="repeatIteration" value="0" />
-          </properties>
-        </test-case>
-        <test-case id="1045" name="Stamp_GarbageParsesAsZero" fullname="OfflineTests.Stamp_GarbageParsesAsZero" methodname="Stamp_GarbageParsesAsZero" classname="OfflineTests" runstate="Runnable" seed="482299737" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.002136" asserts="0">
-          <properties>
-            <property name="retryIteration" value="0" />
-            <property name="repeatIteration" value="0" />
-          </properties>
-        </test-case>
-        <test-case id="1044" name="Stamp_RoundTripsUnderCommaDecimalLocale" fullname="OfflineTests.Stamp_RoundTripsUnderCommaDecimalLocale" methodname="Stamp_RoundTripsUnderCommaDecimalLocale" classname="OfflineTests" runstate="Runnable" seed="1733313773" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.003430" asserts="0">
-          <properties>
-            <property name="retryIteration" value="0" />
-            <property name="repeatIteration" value="0" />
-          </properties>
-        </test-case>
-        <test-case id="1038" name="StillBelowHighWaterMark_PaysZero" fullname="OfflineTests.StillBelowHighWaterMark_PaysZero" methodname="StillBelowHighWaterMark_PaysZero" classname="OfflineTests" runstate="Runnable" seed="699535936" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000254" asserts="0">
+        <test-case id="1034" name="SaveWithWrongBuildingCount_ResetsBuildingsOnly" fullname="EconomyTests.SaveWithWrongBuildingCount_ResetsBuildingsOnly" methodname="SaveWithWrongBuildingCount_ResetsBuildingsOnly" classname="EconomyTests" runstate="Runnable" seed="336287313" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000251" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
       </test-suite>
-      <test-suite type="TestFixture" id="1046" name="RewardedTests" fullname="RewardedTests" classname="RewardedTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.004971" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <test-suite type="TestFixture" id="1035" name="OfflineTests" fullname="OfflineTests" classname="OfflineTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.009779" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
         <properties />
-        <test-case id="1051" name="CallbacksWithoutShow_AreIgnored" fullname="RewardedTests.CallbacksWithoutShow_AreIgnored" methodname="CallbacksWithoutShow_AreIgnored" classname="RewardedTests" runstate="Runnable" seed="999393072" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000562" asserts="0">
+        <test-case id="1039" name="CappedAtEightHours" fullname="OfflineTests.CappedAtEightHours" methodname="CappedAtEightHours" classname="OfflineTests" runstate="Runnable" seed="1536984375" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000787" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1047" name="ClosedWithoutEarned_GrantsNothing" fullname="RewardedTests.ClosedWithoutEarned_GrantsNothing" methodname="ClosedWithoutEarned_GrantsNothing" classname="RewardedTests" runstate="Runnable" seed="1019288403" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000373" asserts="0">
+        <test-case id="1036" name="ClockRolledBack_PaysZero" fullname="OfflineTests.ClockRolledBack_PaysZero" methodname="ClockRolledBack_PaysZero" classname="OfflineTests" runstate="Runnable" seed="1945938237" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000185" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1050" name="DuplicateCallbacks_NeverGrantTwice" fullname="RewardedTests.DuplicateCallbacks_NeverGrantTwice" methodname="DuplicateCallbacks_NeverGrantTwice" classname="RewardedTests" runstate="Runnable" seed="1211463171" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000209" asserts="0">
+        <test-case id="1040" name="EfficiencyIsFiftyPercent" fullname="OfflineTests.EfficiencyIsFiftyPercent" methodname="EfficiencyIsFiftyPercent" classname="OfflineTests" runstate="Runnable" seed="1068939461" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000147" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1052" name="EachShow_GrantsAtMostOnce" fullname="RewardedTests.EachShow_GrantsAtMostOnce" methodname="EachShow_GrantsAtMostOnce" classname="RewardedTests" runstate="Runnable" seed="132972191" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000209" asserts="0">
+        <test-case id="1043" name="OfflineDouble_AfterCollect_PaysNothing" fullname="OfflineTests.OfflineDouble_AfterCollect_PaysNothing" methodname="OfflineDouble_AfterCollect_PaysNothing" classname="OfflineTests" runstate="Runnable" seed="1311735615" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000431" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1049" name="EarnedAfterClose_GrantsOnce" fullname="RewardedTests.EarnedAfterClose_GrantsOnce" methodname="EarnedAfterClose_GrantsOnce" classname="RewardedTests" runstate="Runnable" seed="1410085189" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.001691" asserts="0">
+        <test-case id="1042" name="OfflineDouble_OnlyOnce" fullname="OfflineTests.OfflineDouble_OnlyOnce" methodname="OfflineDouble_OnlyOnce" classname="OfflineTests" runstate="Runnable" seed="1103856231" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000217" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1048" name="EarnedBeforeClose_GrantsOnceOnClose" fullname="RewardedTests.EarnedBeforeClose_GrantsOnceOnClose" methodname="EarnedBeforeClose_GrantsOnceOnClose" classname="RewardedTests" runstate="Runnable" seed="2023639142" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000285" asserts="0">
+        <test-case id="1037" name="RollbackThenForward_MeasuresFromHighWaterMark" fullname="OfflineTests.RollbackThenForward_MeasuresFromHighWaterMark" methodname="RollbackThenForward_MeasuresFromHighWaterMark" classname="OfflineTests" runstate="Runnable" seed="1438347738" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000158" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1041" name="ShortAbsenceAndFirstLaunch_PayZero" fullname="OfflineTests.ShortAbsenceAndFirstLaunch_PayZero" methodname="ShortAbsenceAndFirstLaunch_PayZero" classname="OfflineTests" runstate="Runnable" seed="444192470" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000177" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1045" name="Stamp_GarbageParsesAsZero" fullname="OfflineTests.Stamp_GarbageParsesAsZero" methodname="Stamp_GarbageParsesAsZero" classname="OfflineTests" runstate="Runnable" seed="1498464829" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.002026" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1044" name="Stamp_RoundTripsUnderCommaDecimalLocale" fullname="OfflineTests.Stamp_RoundTripsUnderCommaDecimalLocale" methodname="Stamp_RoundTripsUnderCommaDecimalLocale" classname="OfflineTests" runstate="Runnable" seed="779813557" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.003276" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1038" name="StillBelowHighWaterMark_PaysZero" fullname="OfflineTests.StillBelowHighWaterMark_PaysZero" methodname="StillBelowHighWaterMark_PaysZero" classname="OfflineTests" runstate="Runnable" seed="1834988980" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000191" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
       </test-suite>
-      <test-suite type="TestFixture" id="1053" name="TimeWarpTriggerTests" fullname="TimeWarpTriggerTests" classname="TimeWarpTriggerTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.005065" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <test-suite type="TestFixture" id="1046" name="RewardedTests" fullname="RewardedTests" classname="RewardedTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.004676" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
         <properties />
-        <test-case id="1060" name="AllOwned_UsesMostExpensiveBuilding" fullname="TimeWarpTriggerTests.AllOwned_UsesMostExpensiveBuilding" methodname="AllOwned_UsesMostExpensiveBuilding" classname="TimeWarpTriggerTests" runstate="Runnable" seed="847700435" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000724" asserts="0">
+        <test-case id="1051" name="CallbacksWithoutShow_AreIgnored" fullname="RewardedTests.CallbacksWithoutShow_AreIgnored" methodname="CallbacksWithoutShow_AreIgnored" classname="RewardedTests" runstate="Runnable" seed="252586558" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000534" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1063" name="BoostDoesNotChangeTheGoalTime" fullname="TimeWarpTriggerTests.BoostDoesNotChangeTheGoalTime" methodname="BoostDoesNotChangeTheGoalTime" classname="TimeWarpTriggerTests" runstate="Runnable" seed="2134202467" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000210" asserts="0">
+        <test-case id="1047" name="ClosedWithoutEarned_GrantsNothing" fullname="RewardedTests.ClosedWithoutEarned_GrantsNothing" methodname="ClosedWithoutEarned_GrantsNothing" classname="RewardedTests" runstate="Runnable" seed="1567239306" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000307" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1056" name="CheapOwnedBuildingAffordable_StillShownForNewTier" fullname="TimeWarpTriggerTests.CheapOwnedBuildingAffordable_StillShownForNewTier" methodname="CheapOwnedBuildingAffordable_StillShownForNewTier" classname="TimeWarpTriggerTests" runstate="Runnable" seed="1108705745" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000387" asserts="0">
+        <test-case id="1050" name="DuplicateCallbacks_NeverGrantTwice" fullname="RewardedTests.DuplicateCallbacks_NeverGrantTwice" methodname="DuplicateCallbacks_NeverGrantTwice" classname="RewardedTests" runstate="Runnable" seed="1645198053" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000222" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1061" name="CooldownActive_Hidden" fullname="TimeWarpTriggerTests.CooldownActive_Hidden" methodname="CooldownActive_Hidden" classname="TimeWarpTriggerTests" runstate="Runnable" seed="1846367991" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000177" asserts="0">
+        <test-case id="1052" name="EachShow_GrantsAtMostOnce" fullname="RewardedTests.EachShow_GrantsAtMostOnce" methodname="EachShow_GrantsAtMostOnce" classname="RewardedTests" runstate="Runnable" seed="1847194881" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000211" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1062" name="CooldownFromAdPacing_HidesForTenMinutes" fullname="TimeWarpTriggerTests.CooldownFromAdPacing_HidesForTenMinutes" methodname="CooldownFromAdPacing_HidesForTenMinutes" classname="TimeWarpTriggerTests" runstate="Runnable" seed="453682014" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000240" asserts="0">
+        <test-case id="1049" name="EarnedAfterClose_GrantsOnce" fullname="RewardedTests.EarnedAfterClose_GrantsOnce" methodname="EarnedAfterClose_GrantsOnce" classname="RewardedTests" runstate="Runnable" seed="1673451204" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.001627" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1058" name="GoalAffordable_ReturnsZero" fullname="TimeWarpTriggerTests.GoalAffordable_ReturnsZero" methodname="GoalAffordable_ReturnsZero" classname="TimeWarpTriggerTests" runstate="Runnable" seed="488109225" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000203" asserts="0">
+        <test-case id="1048" name="EarnedBeforeClose_GrantsOnceOnClose" fullname="RewardedTests.EarnedBeforeClose_GrantsOnceOnClose" methodname="EarnedBeforeClose_GrantsOnceOnClose" classname="RewardedTests" runstate="Runnable" seed="964122610" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000252" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1059" name="GoalIsLowestUnownedIndex_NotCheapest" fullname="TimeWarpTriggerTests.GoalIsLowestUnownedIndex_NotCheapest" methodname="GoalIsLowestUnownedIndex_NotCheapest" classname="TimeWarpTriggerTests" runstate="Runnable" seed="337130047" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000167" asserts="0">
+      </test-suite>
+      <test-suite type="TestFixture" id="1053" name="TimeWarpTriggerTests" fullname="TimeWarpTriggerTests" classname="TimeWarpTriggerTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.005397" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1060" name="AllOwned_UsesMostExpensiveBuilding" fullname="TimeWarpTriggerTests.AllOwned_UsesMostExpensiveBuilding" methodname="AllOwned_UsesMostExpensiveBuilding" classname="TimeWarpTriggerTests" runstate="Runnable" seed="1167106764" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000876" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1055" name="NewTierMoreThanThreeMinutesAway_Shown" fullname="TimeWarpTriggerTests.NewTierMoreThanThreeMinutesAway_Shown" methodname="NewTierMoreThanThreeMinutesAway_Shown" classname="TimeWarpTriggerTests" runstate="Runnable" seed="1925002250" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000294" asserts="0">
+        <test-case id="1063" name="BoostDoesNotChangeTheGoalTime" fullname="TimeWarpTriggerTests.BoostDoesNotChangeTheGoalTime" methodname="BoostDoesNotChangeTheGoalTime" classname="TimeWarpTriggerTests" runstate="Runnable" seed="645735160" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000307" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1057" name="NewTierWithinThreeMinutes_Hidden" fullname="TimeWarpTriggerTests.NewTierWithinThreeMinutes_Hidden" methodname="NewTierWithinThreeMinutes_Hidden" classname="TimeWarpTriggerTests" runstate="Runnable" seed="791029189" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000206" asserts="0">
+        <test-case id="1056" name="CheapOwnedBuildingAffordable_StillShownForNewTier" fullname="TimeWarpTriggerTests.CheapOwnedBuildingAffordable_StillShownForNewTier" methodname="CheapOwnedBuildingAffordable_StillShownForNewTier" classname="TimeWarpTriggerTests" runstate="Runnable" seed="933717175" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000403" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />
           </properties>
         </test-case>
-        <test-case id="1054" name="NoIncome_Hidden" fullname="TimeWarpTriggerTests.NoIncome_Hidden" methodname="NoIncome_Hidden" classname="TimeWarpTriggerTests" runstate="Runnable" seed="715536499" result="Passed" start-time="2026-11-08 00:37:36Z" end-time="2026-11-08 00:37:36Z" duration="0.000227" asserts="0">
+        <test-case id="1061" name="CooldownActive_Hidden" fullname="TimeWarpTriggerTests.CooldownActive_Hidden" methodname="CooldownActive_Hidden" classname="TimeWarpTriggerTests" runstate="Runnable" seed="27607182" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000188" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1062" name="CooldownFromAdPacing_HidesForTenMinutes" fullname="TimeWarpTriggerTests.CooldownFromAdPacing_HidesForTenMinutes" methodname="CooldownFromAdPacing_HidesForTenMinutes" classname="TimeWarpTriggerTests" runstate="Runnable" seed="865122417" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000224" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1058" name="GoalAffordable_ReturnsZero" fullname="TimeWarpTriggerTests.GoalAffordable_ReturnsZero" methodname="GoalAffordable_ReturnsZero" classname="TimeWarpTriggerTests" runstate="Runnable" seed="940665100" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000202" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1059" name="GoalIsLowestUnownedIndex_NotCheapest" fullname="TimeWarpTriggerTests.GoalIsLowestUnownedIndex_NotCheapest" methodname="GoalIsLowestUnownedIndex_NotCheapest" classname="TimeWarpTriggerTests" runstate="Runnable" seed="1160286062" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000169" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1055" name="NewTierMoreThanThreeMinutesAway_Shown" fullname="TimeWarpTriggerTests.NewTierMoreThanThreeMinutesAway_Shown" methodname="NewTierMoreThanThreeMinutesAway_Shown" classname="TimeWarpTriggerTests" runstate="Runnable" seed="305227931" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000305" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1057" name="NewTierWithinThreeMinutes_Hidden" fullname="TimeWarpTriggerTests.NewTierWithinThreeMinutes_Hidden" methodname="NewTierWithinThreeMinutes_Hidden" classname="TimeWarpTriggerTests" runstate="Runnable" seed="1841950737" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000216" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1054" name="NoIncome_Hidden" fullname="TimeWarpTriggerTests.NoIncome_Hidden" methodname="NoIncome_Hidden" classname="TimeWarpTriggerTests" runstate="Runnable" seed="1420339377" result="Passed" start-time="2026-11-08 01:36:48Z" end-time="2026-11-08 01:36:48Z" duration="0.000224" asserts="0">
           <properties>
             <property name="retryIteration" value="0" />
             <property name="repeatIteration" value="0" />

@@ -73,7 +73,7 @@ public class UpgradeSystem
         new BuildingDef{ name="Coin Press",  baseCost=15,     baseProd=0.5,   rate=1.15 },
         new BuildingDef{ name="Mini Forge",  baseCost=120,    baseProd=3,     rate=1.15 },
         new BuildingDef{ name="Smelter",     baseCost=1.2e3,  baseProd=20,    rate=1.14 },
-        new BuildingDef{ name="Foundry",     baseCost=1.3e4,  baseProd=110,   rate=1.13 },
+        new BuildingDef{ name="Foundry",     baseCost=2.6e4,  baseProd=110,   rate=1.13 },
         new BuildingDef{ name="Mint",        baseCost=1.5e5,  baseProd=600,   rate=1.13 },
         new BuildingDef{ name="Vault",       baseCost=1.8e6,  baseProd=3.3e3, rate=1.12 },
         new BuildingDef{ name="Bank",        baseCost=2.5e7,  baseProd=1.8e4, rate=1.12 },
