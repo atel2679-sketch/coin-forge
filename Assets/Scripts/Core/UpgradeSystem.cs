@@ -69,15 +69,16 @@ public class UpgradeSystem
 
     public static BuildingDef[] DefaultDefs() => new[]
     {
-        new BuildingDef{ name="Coin Press",  baseCost=15,     baseProd=0.1,   rate=1.15 },
-        new BuildingDef{ name="Mini Forge",  baseCost=100,    baseProd=1,     rate=1.15 },
-        new BuildingDef{ name="Smelter",     baseCost=1.1e3,  baseProd=8,     rate=1.14 },
-        new BuildingDef{ name="Foundry",     baseCost=1.2e4,  baseProd=47,    rate=1.13 },
-        new BuildingDef{ name="Mint",        baseCost=1.3e5,  baseProd=260,   rate=1.13 },
-        new BuildingDef{ name="Vault",       baseCost=1.4e6,  baseProd=1.4e3, rate=1.12 },
-        new BuildingDef{ name="Bank",        baseCost=2e7,    baseProd=7.8e3, rate=1.12 },
-        new BuildingDef{ name="Exchange",    baseCost=3.3e8,  baseProd=4.4e4, rate=1.11 },
-        new BuildingDef{ name="Treasury",    baseCost=5.1e9,  baseProd=2.6e5, rate=1.10 },
-        new BuildingDef{ name="Galaxy Mint", baseCost=7.5e10, baseProd=1.6e6, rate=1.10 },
+        // IC-05 balance pass (PM). Cost growth, milestones, tap, offline and prestige formulas unchanged.
+        new BuildingDef{ name="Coin Press",  baseCost=15,     baseProd=0.5,   rate=1.15 },
+        new BuildingDef{ name="Mini Forge",  baseCost=120,    baseProd=3,     rate=1.15 },
+        new BuildingDef{ name="Smelter",     baseCost=1.2e3,  baseProd=20,    rate=1.14 },
+        new BuildingDef{ name="Foundry",     baseCost=1.3e4,  baseProd=110,   rate=1.13 },
+        new BuildingDef{ name="Mint",        baseCost=1.5e5,  baseProd=600,   rate=1.13 },
+        new BuildingDef{ name="Vault",       baseCost=1.8e6,  baseProd=3.3e3, rate=1.12 },
+        new BuildingDef{ name="Bank",        baseCost=2.5e7,  baseProd=1.8e4, rate=1.12 },
+        new BuildingDef{ name="Exchange",    baseCost=4e8,    baseProd=1e5,   rate=1.11 },
+        new BuildingDef{ name="Treasury",    baseCost=6e9,    baseProd=6e5,   rate=1.10 },
+        new BuildingDef{ name="Galaxy Mint", baseCost=9e10,   baseProd=3.6e6, rate=1.10 },
     };
 }

@@ -27,6 +27,7 @@ public sealed class CoinForgeDebugPanel : MonoBehaviour
         ("Consent: toggle EEA test geography", ToggleEea),
         ("Consent: reset (applies on restart)", AdManager.DebugResetConsent),
         (PerfLabel, () => CoinForgePerfProbe.Begin(60)),
+        ("Playtest bot (IC-05)", CoinForgePlaytestBot.Begin),
         ("Close", null),
     };
 

@@ -1,0 +1,7 @@
+11-08 08:00:12.716 I/Unity   (19131): [Consent] status=NotRequired canRequestAds=True privacyOptions=NotRequired
+11-08 08:00:12.718 I/Unity   (19131): [Ads] MobileAds.Initialize (consent allows ads)
+11-08 08:00:13.483 I/Unity   (19131): IC05_PLAYTEST t=0:27 start profile=3/s<1:00, 2/s<4:00, 1/s after
+11-08 08:00:45.196 I/Unity   (19131): IC05_PLAYTEST t=0:59 unlock T2 Mini Forge coins_income=3.5
+11-08 08:00:45.211 I/Unity   (19131): IC05_PLAYTEST t=0:59 timewarp_first_shown income=3.5 goal_s=343
+11-08 08:02:53.058 I/Unity   (19131): IC05_PLAYTEST t=3:07 unlock T3 Smelter coins_income=34
+11-08 08:06:35.128 I/Unity   (19131): IC05_PLAYTEST t=6:49 unlock T4 Foundry coins_income=234.5
