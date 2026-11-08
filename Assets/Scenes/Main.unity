@@ -119,6 +119,103 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &43435242
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1272248857290853838, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9074402730639686183, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
+      propertyPath: m_Name
+      value: CoinForgeIntro
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1f3d36b787ce2ab4380258d58bad9f9d, type: 3}
 --- !u!1 &59324451
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,9 +597,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1ff8d6c46e0a624296209007ff46526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AdManager
-  rewardedId: ca-app-pub-3940256099942544/5224354917
-  interstitialId: ca-app-pub-3940256099942544/1033173712
-  bannerId: ca-app-pub-3940256099942544/9214589741
   interstitialCooldown: 300
   sessionGrace: 180
   afterRewardedGrace: 60
@@ -531,3 +625,4 @@ SceneRoots:
   - {fileID: 768444095}
   - {fileID: 1923750045}
   - {fileID: 755802664}
+  - {fileID: 43435242}

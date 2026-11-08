@@ -1,0 +1,8 @@
+11-08 18:18:19.313  4433  4462 I Unity   : [Intro] phase=forge
+11-08 18:18:19.568  4433  4462 I Unity   : [Consent] Test geography: device default
+11-08 18:18:19.611  4433  4462 I Unity   : IC08_QA intro=True pending=True consent=True tutorial=0 dialog=None blocked=True
+11-08 18:18:20.615  4433  4462 I Unity   : [Intro] begin full
+11-08 18:18:21.518  4433  4462 I Unity   : [Intro] phase=impact-logo
+11-08 18:18:22.017  4433  4462 I Unity   : [Intro] phase=loading
+11-08 18:18:22.934  4433  4462 I Unity   : [Intro] complete elapsed=2.319 skipped=False
+11-08 18:18:22.936  4433  4462 I Unity   : IC08_QA intro frames=129 fps=56.47 p95ms=33.34 maxms=33.35 allocP95=308 allocMax=3038 collections=0

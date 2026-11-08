@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,8 @@ public sealed partial class CoinForgeUI : MonoBehaviour
     double refreshAfter, offlineAmount, awaySeconds;
     double savedPlayTime, foregroundSince, nextTimeSave;
     bool started, foreground, adInFlight;
+    bool startupScreensReady;
+    CanvasGroup startupGroup;
     double shownCoins = -1, shownIncome = -1, shownWarp = -1;
     int shownGems = -1;
     int quantity = 1; // zero selects Max
@@ -42,10 +45,32 @@ public sealed partial class CoinForgeUI : MonoBehaviour
         BeginForeground();
         Build();
         Reflow();
-        CheckFirstTutorial();
-        if (offline != null && offline.PendingAmount > 0)
-            OnOffline(offline.PendingAmount, offline.AwaySeconds);
+        startupGroup = gameObject.AddComponent<CanvasGroup>();
+        startupGroup.alpha = CoinForgePresentation.IntroActive ? 0 : 1;
+        startupGroup.blocksRaycasts = false;
         Refresh();
+        StartCoroutine(ShowStartupScreens());
+    }
+
+    IEnumerator ShowStartupScreens()
+    {
+        while (CoinForgePresentation.IntroActive)
+        {
+            if (CoinForgePresentation.IntroFading) startupGroup.alpha = 1;
+            yield return null;
+        }
+        startupGroup.alpha = 1;
+        while (AdManager.I != null && AdManager.I.StartupConsentPending) yield return null;
+        startupScreensReady = true;
+        startupGroup.blocksRaycasts = true;
+        if (offline != null && offline.PendingAmount > 0)
+        {
+            OnOffline(offline.PendingAmount, offline.AwaySeconds);
+            CoinForgePresentation.StartupPending = false;
+            while (dialog == Dialog.Offline) yield return null;
+        }
+        CheckFirstTutorial();
+        CoinForgePresentation.StartupPending = false;
     }
 
     void OnDisable()
@@ -96,7 +121,7 @@ public sealed partial class CoinForgeUI : MonoBehaviour
 
     void OnCoins(double _)
     {
-        if (safe == null) return;
+        if (safe == null || (CoinForgePresentation.IntroActive && !CoinForgePresentation.IntroFading)) return;
         // Immediate purchase events can arrive between the core's 10 Hz heartbeats.
         double now = Time.realtimeSinceStartupAsDouble;
         if (now < refreshAfter) return;
@@ -136,7 +161,7 @@ public sealed partial class CoinForgeUI : MonoBehaviour
 
     void ShowAd(RewardType type)
     {
-        if (InTutorial || adInFlight || AdManager.I == null) return;
+        if (!startupScreensReady || InTutorial || adInFlight || AdManager.I == null) return;
         if (type == RewardType.TimeWarp && !CanTimeWarp()) return;
         adInFlight = AdManager.I.ShowRewarded(type);
         RefreshAdControls();
@@ -267,7 +292,7 @@ public sealed partial class CoinForgeUI : MonoBehaviour
 
     void Open(Dialog next)
     {
-        if (InTutorial || (dialog == Dialog.Offline && next != Dialog.Offline)) return;
+        if (!startupScreensReady || InTutorial || (dialog == Dialog.Offline && next != Dialog.Offline)) return;
         dialog = next;
         modal.gameObject.SetActive(true);
         offlineCard.gameObject.SetActive(next == Dialog.Offline);

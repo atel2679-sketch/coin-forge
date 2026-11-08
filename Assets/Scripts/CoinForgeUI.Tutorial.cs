@@ -14,8 +14,7 @@ public sealed partial class CoinForgeUI
     Text tutorialStepText, tutorialMessage, tutorialDetail, tutorialNextText;
     Button tutorialSkip, tutorialNext;
     int tutorialStep, tutorialTapCount, previousQuantity;
-    bool replayOwnedPress, waitingForPress, restoreAdManager, tutorialBannerHidden;
-    AdManager tutorialAdManager;
+    bool replayOwnedPress, waitingForPress;
     Vector2 handRest;
 
     bool InTutorial => tutorialStep != 0;
@@ -67,27 +66,17 @@ public sealed partial class CoinForgeUI
 
     void SuppressTutorialAds()
     {
-        tutorialAdManager = AdManager.I;
-        if (tutorialAdManager == null) return;
-        restoreAdManager = tutorialAdManager.enabled;
-        tutorialAdManager.enabled = false;
-        HideTutorialBanner();
+        CoinForgePresentation.TutorialActive = true;
     }
 
     void HideTutorialBanner()
     {
-        if (tutorialAdManager == null) return;
-        tutorialBannerHidden = tutorialAdManager.BannerHeightPx > 0;
-        tutorialAdManager.HideBanner();
+        if (InTutorial && AdManager.I != null) AdManager.I.HideBanner();
     }
 
     void ReleaseTutorialAds()
     {
-        if (tutorialAdManager == null) return;
-        tutorialAdManager.enabled = restoreAdManager;
-        tutorialAdManager.RestoreBanner();
-        tutorialAdManager = null;
-        tutorialBannerHidden = false;
+        CoinForgePresentation.TutorialActive = false;
     }
 
     void FinishTutorial()
@@ -246,7 +235,6 @@ public sealed partial class CoinForgeUI
     void LateUpdate()
     {
         if (!InTutorial) return;
-        if (!tutorialBannerHidden) HideTutorialBanner();
         float bob = (Mathf.Sin(Time.unscaledTime * 5.5f) + 1) * 7;
         tutorialHand.anchoredPosition = handRest + Vector2.up * bob;
     }

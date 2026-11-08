@@ -1,0 +1,137 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &9074402730639686183
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1272248857290853838}
+  - component: {fileID: 6907185980629701907}
+  - component: {fileID: 1911838772400181273}
+  - component: {fileID: 8461617370323137241}
+  - component: {fileID: 8361066719214159073}
+  m_Layer: 0
+  m_Name: CoinForgeIntro
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1272248857290853838
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9074402730639686183}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!223 &6907185980629701907
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9074402730639686183}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 30000
+  m_TargetDisplay: 0
+--- !u!114 &1911838772400181273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9074402730639686183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 1080, y: 1920}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0.5
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
+--- !u!114 &8461617370323137241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9074402730639686183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &8361066719214159073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9074402730639686183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20cbf0a1fba49804eace548e4ad24518, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::CoinForgeIntro
+  background: {fileID: 21300000, guid: b2c30edde41e0154385a5120d07ee4c8, type: 3}
+  coin: {fileID: 21300000, guid: 73b962ec7d3b1d948a4178bd56d67270, type: 3}
+  hammer: {fileID: 21300000, guid: 85b065d39b18d744185dd4c82f30f19a, type: 3}
+  logo: {fileID: 21300000, guid: 318208bd42043bd4cbeb8077e5f160e1, type: 3}
+  bar: {fileID: 21300000, guid: 6984bc0bcf204b04ebee7e9865285e49, type: 3}
+  coinBurst:
+  - {fileID: 21300000, guid: 0b4f9c8cb6c376943a9320b63d6461bc, type: 3}
+  - {fileID: 21300000, guid: 756f36a2b7023da47afd181c1ed4bd3c, type: 3}
+  - {fileID: 21300000, guid: 8ec4c085cf622f646b7dfdde53409bc6, type: 3}
+  - {fileID: 21300000, guid: 148ed92e66b85aa48ae3616ed53f2c65, type: 3}
+  - {fileID: 21300000, guid: 80f3c4b66dbc2bc48910ac590827691d, type: 3}
+  - {fileID: 21300000, guid: f733e24bea48bc94780a3fc87c5fb9f0, type: 3}
+  - {fileID: 21300000, guid: 434c5a564332a85488b993d3b9141869, type: 3}
+  - {fileID: 21300000, guid: af70eb302a167e341b433210d192c8b7, type: 3}
+  sparkle:
+  - {fileID: 21300000, guid: 3a5f07b02f3907146b7f294c9ab9e8a3, type: 3}
+  - {fileID: 21300000, guid: 0ee23b6ce3ff17444bde5ed37bbf7b3c, type: 3}
+  - {fileID: 21300000, guid: a1d24c24b72c5044789ce18202422848, type: 3}
+  - {fileID: 21300000, guid: 0d1db98be8164634694510929e5c6755, type: 3}
+  - {fileID: 21300000, guid: 1f4e34f930004274aab2bde5f202030a, type: 3}
+  - {fileID: 21300000, guid: e3fd0a0489737c44c904201a8160da03, type: 3}

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(CanvasRenderer))]
 public sealed class CoinForgeTutorialHand : MaskableGraphic
 {
     // Outline of a hand with its index finger pointing up.

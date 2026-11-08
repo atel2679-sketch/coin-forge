@@ -1,0 +1,13 @@
+11-08 18:15:48.478  2842  2871 I Unity   : [Intro] phase=forge
+11-08 18:15:48.835  2842  2871 I Unity   : [Consent] Test geography: EEA
+11-08 18:15:48.900  2842  2871 I Unity   : IC08_QA intro=True pending=True consent=True tutorial=0 dialog=None blocked=True
+11-08 18:15:49.395  2842  2871 I Unity   : [Intro] begin full
+11-08 18:15:50.302  2842  2871 I Unity   : [Intro] phase=impact-logo
+11-08 18:15:50.805  2842  2871 I Unity   : [Intro] phase=loading
+11-08 18:15:51.722  2842  2871 I Unity   : [Consent] presentation released after intro
+11-08 18:15:51.735  2842  2871 I Unity   : [Intro] complete elapsed=2.347 skipped=False
+11-08 18:15:51.741  2842  2871 I Unity   : IC08_QA intro frames=121 fps=52.60 p95ms=33.35 maxms=50.05 allocP95=308 allocMax=3086 collections=1
+11-08 18:15:51.820  2842  2871 I Unity   : IC08_QA intro=False pending=True consent=True tutorial=0 dialog=None blocked=True
+11-08 18:16:42.398  2842  2871 I Unity   : [Consent] status=Obtained canRequestAds=True privacyOptions=Required
+11-08 18:16:42.401  2842  2871 I Unity   : [Ads] MobileAds.Initialize (consent allows ads), test IDs: True
+11-08 18:16:42.518  2842  2871 I Unity   : IC08_QA intro=False pending=False consent=False tutorial=1 dialog=None blocked=True

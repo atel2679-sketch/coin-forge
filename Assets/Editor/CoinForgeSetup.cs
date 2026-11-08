@@ -83,6 +83,7 @@ public static class CoinForgeSetup
         var ui = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/CoinForgeUI.prefab");
         if (ui == null) throw new FileNotFoundException("Missing Coin Forge UI prefab");
         PrefabUtility.InstantiatePrefab(ui, scene);
+        CoinForgeIntroSetup.AddToScene(scene);
 
         EditorSceneManager.SaveScene(scene, ScenePath);
         EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };

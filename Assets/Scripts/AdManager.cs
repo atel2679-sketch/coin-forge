@@ -79,11 +79,13 @@ public class AdManager : MonoBehaviour
 
     void OnEnable()
     {
+        CoinForgePresentation.Changed += OnPresentationChanged;
         GameEvents.PrestigeDone += TryShowInterstitial;
         GameEvents.MilestoneMenuOpened += TryShowInterstitial;
     }
     void OnDisable()
     {
+        CoinForgePresentation.Changed -= OnPresentationChanged;
         GameEvents.PrestigeDone -= TryShowInterstitial;
         GameEvents.MilestoneMenuOpened -= TryShowInterstitial;
     }
@@ -95,7 +97,8 @@ public class AdManager : MonoBehaviour
     public static event Action PrivacyOptionsChanged;
 
     const float ConsentRetrySeconds = 60;
-    bool consentInFlight, consentKnown, consentStarted;
+    bool consentInFlight, consentKnown, consentStarted, consentFormPending;
+    public bool StartupConsentPending { get; private set; } = true;
 
     public bool PrivacyOptionsRequired =>
         consentKnown && ConsentInformation.PrivacyOptionsRequirementStatus == PrivacyOptionsRequirementStatus.Required;
@@ -117,6 +120,7 @@ public class AdManager : MonoBehaviour
         if (consentInFlight) return;
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
+            StartupConsentPending = false;
             Debug.Log("[Consent] Offline; retrying later");
             ScheduleConsentRetry();
             return;
@@ -128,22 +132,40 @@ public class AdManager : MonoBehaviour
             if (updateError != null)
             {
                 consentInFlight = false;
+                StartupConsentPending = false;
                 Debug.LogWarning($"[Consent] Update failed: {updateError.Message}");
                 ScheduleConsentRetry();
                 return;
             }
-            ConsentForm.LoadAndShowConsentFormIfRequired(formError => OnMain(() =>
-            {
-                consentInFlight = false;
-                consentKnown = true;
-                if (formError != null) Debug.LogWarning($"[Consent] Form failed: {formError.Message}");
-                Debug.Log($"[Consent] status={ConsentInformation.ConsentStatus} canRequestAds={ConsentInformation.CanRequestAds()} " +
-                          $"privacyOptions={ConsentInformation.PrivacyOptionsRequirementStatus}");
-                PrivacyOptionsChanged?.Invoke();
-                if (ConsentInformation.CanRequestAds()) Init();
-                else ScheduleConsentRetry();
-            }));
+            consentFormPending = true;
+            TryShowPendingConsent();
         }));
+    }
+
+    void TryShowPendingConsent()
+    {
+        if (!consentFormPending || CoinForgePresentation.IntroActive || CoinForgePresentation.TutorialActive) return;
+        consentFormPending = false;
+        Debug.Log("[Consent] presentation released after intro");
+        ConsentForm.LoadAndShowConsentFormIfRequired(formError => OnMain(() =>
+        {
+            consentInFlight = false;
+            StartupConsentPending = false;
+            consentKnown = true;
+            if (formError != null) Debug.LogWarning($"[Consent] Form failed: {formError.Message}");
+            Debug.Log($"[Consent] status={ConsentInformation.ConsentStatus} canRequestAds={ConsentInformation.CanRequestAds()} " +
+                      $"privacyOptions={ConsentInformation.PrivacyOptionsRequirementStatus}");
+            PrivacyOptionsChanged?.Invoke();
+            if (ConsentInformation.CanRequestAds()) Init();
+            else ScheduleConsentRetry();
+        }));
+    }
+
+    void OnPresentationChanged()
+    {
+        TryShowPendingConsent();
+        if (CoinForgePresentation.AdsBlocked) HideBanner();
+        else RestoreBanner();
     }
 
     void ScheduleConsentRetry()
@@ -161,6 +183,7 @@ public class AdManager : MonoBehaviour
     /// <summary>"Privacy settings" button: lets the user change or withdraw consent.</summary>
     public void ShowPrivacyOptions()
     {
+        if (CoinForgePresentation.AdsBlocked) return;
         ConsentForm.ShowPrivacyOptionsForm(formError => OnMain(() =>
         {
             if (formError != null) Debug.LogWarning($"[Consent] Privacy options failed: {formError.Message}");
@@ -257,7 +280,7 @@ public class AdManager : MonoBehaviour
     /// <summary>Called by UI buttons: Boost2x, TimeWarp, OfflineDouble.</summary>
     public bool ShowRewarded(RewardType type)
     {
-        if (rewarded == null || !rewarded.CanShowAd()) return false;   // fresh check on the user's tap
+        if (CoinForgePresentation.AdsBlocked || rewarded == null || !rewarded.CanShowAd()) return false;   // fresh check on the user's tap
         if (type == RewardType.TimeWarp && !TimeWarpReady) return false;
 
         rewardFlow.Begin(type);
@@ -296,7 +319,7 @@ public class AdManager : MonoBehaviour
 
     public void TryShowInterstitial()
     {
-        if (!Pacing.InterstitialAllowed) return;
+        if (CoinForgePresentation.AdsBlocked || !Pacing.InterstitialAllowed) return;
         if (interstitial == null || !interstitial.CanShowAd()) return;
 
         Pacing.MarkInterstitialShown();
@@ -313,14 +336,19 @@ public class AdManager : MonoBehaviour
         banner.OnBannerAdLoaded += () => OnMain(() =>
         {
             bannerHeightPx = banner.GetHeightInPixels();   // read once per load, not per UI refresh
+            if (CoinForgePresentation.AdsBlocked) banner.Hide();
             Debug.Log($"[Ads] Banner height px: {bannerHeightPx}");
         });
         banner.OnBannerAdLoadFailed += e => OnMain(() => Debug.LogWarning($"[Ads] Banner load failed: {e}"));
+        if (CoinForgePresentation.AdsBlocked) banner.Hide();
         banner.LoadAd(new AdRequest());
     }
 
     public void HideBanner() => banner?.Hide();
-    public void RestoreBanner() => banner?.Show();
+    public void RestoreBanner()
+    {
+        if (!CoinForgePresentation.AdsBlocked) banner?.Show();
+    }
 
     void OnDestroy()
     {
