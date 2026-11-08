@@ -1,0 +1,22 @@
+# IC-06: R8 keep rules for release builds (minify on).
+# The Google Mobile Ads Unity plugin .aar ships the same rules as consumer rules; they are repeated here so the
+# release build does not depend on that, and Unity calls these classes by name through JNI (AndroidJavaObject/Proxy).
+
+# Google Mobile Ads Unity plugin bridge + UMP bridge (called from C# by class/method name).
+-keep class com.google.unity.ads.** { *; }
+-keep class com.google.unity.ump.** { *; }
+
+# Google Mobile Ads SDK and User Messaging Platform public API (reflected/proxied from C#).
+-keep public class com.google.android.gms.ads.** { public *; }
+-keep public class com.google.android.libraries.ads.mobile.sdk.** { public *; }
+-keep public class com.google.android.ump.** { public *; }
+
+# Unity player entry points.
+-keep class com.unity3d.player.** { *; }
+
+-dontwarn com.google.android.gms.**
+
+# The plugin's "nextgen" bridge (com.google.unity.ads.nextgen) references the GMA Next-Gen SDK, which this project
+# does not include (it uses play-services-ads). Those classes are never called; without this R8 stops with
+# 54 "Missing class com.google.android.libraries.ads.mobile.sdk.*" errors.
+-dontwarn com.google.android.libraries.ads.mobile.sdk.**

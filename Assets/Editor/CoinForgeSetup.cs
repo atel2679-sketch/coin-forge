@@ -15,6 +15,10 @@ public static class CoinForgeSetup
     public const string PackageName = "com.publicvoid.coinforge";
     public const string AdMobTestAppId = "ca-app-pub-3940256099942544~3347511713";
     const string ScenePath = "Assets/Scenes/Main.unity";
+    // IC-06 release version.
+    public const string VersionName = "1.0.0";
+    public const int VersionCode = 1;
+    const string AdConfigPath = "Assets/Resources/AdConfig.asset";
 
     static CoinForgeSetup()
     {
@@ -46,6 +50,12 @@ public static class CoinForgeSetup
         PlayerSettings.defaultInterfaceOrientation = UIOrientation.Portrait;
         PlayerSettings.runInBackground = false;
         PlayerSettings.enableFrameTimingStats = true; // IC-04: CPU/GPU frame times for the perf probe
+        PlayerSettings.bundleVersion = VersionName;
+        PlayerSettings.Android.bundleVersionCode = VersionCode;
+        // IC-06: R8 shrinking for release; keep rules in Assets/Plugins/Android/proguard-user.txt.
+        PlayerSettings.Android.minifyRelease = true;
+        PlayerSettings.Android.minifyDebug = false;
+        SetPlayerSetting("useCustomProguardFile", true);
         EditorUserBuildSettings.androidBuildType = AndroidBuildType.Debug;
         EditorUserBuildSettings.buildAppBundle = false;
     }
@@ -78,9 +88,36 @@ public static class CoinForgeSetup
         EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };
     }
 
-    // Writes the test App ID into the plugin settings asset. Reflection so this compiles without the plugin.
+    static void SetPlayerSetting(string name, bool value)
+    {
+        var so = new SerializedObject(Unsupported.GetSerializedAssetInterfaceSingleton("PlayerSettings"));
+        var prop = so.FindProperty(name);
+        if (prop == null) throw new BuildFailedException("PlayerSettings." + name + " not found");
+        prop.boolValue = value;
+        so.ApplyModifiedPropertiesWithoutUndo();
+    }
+
+    // IC-06: the one AdMob config asset (production IDs + test devices). Created empty if missing.
+    [MenuItem("CoinForge/Select Ad Config")]
+    public static void SelectAdConfig() => Selection.activeObject = EnsureAdConfig();
+
+    public static AdConfig EnsureAdConfig()
+    {
+        var config = AssetDatabase.LoadAssetAtPath<AdConfig>(AdConfigPath);
+        if (config != null) return config;
+        Directory.CreateDirectory(Path.GetDirectoryName(AdConfigPath));
+        config = ScriptableObject.CreateInstance<AdConfig>();
+        AssetDatabase.CreateAsset(config, AdConfigPath);
+        AssetDatabase.SaveAssets();
+        return config;
+    }
+
+    // Writes an App ID into the plugin settings asset. Reflection so this compiles without the plugin.
+    // The committed asset always holds the test App ID; a release build swaps in the production one while it builds.
     [MenuItem("CoinForge/Apply AdMob Test App ID")]
-    public static void ApplyAdMobAppId()
+    public static void ApplyAdMobAppId() => ApplyAdMobAppId(AdMobTestAppId);
+
+    static void ApplyAdMobAppId(string appId)
     {
         var t = System.Type.GetType("GoogleMobileAds.Editor.GoogleMobileAdsSettings, GoogleMobileAds.Editor");
         if (t == null)
@@ -93,7 +130,7 @@ public static class CoinForgeSetup
         if (inst == null) { Debug.LogWarning("[CoinForge] Could not load GoogleMobileAdsSettings."); return; }
         var so = new SerializedObject(inst);
         var android = so.FindProperty("adMobAndroidAppId");
-        if (android != null) android.stringValue = AdMobTestAppId;
+        if (android != null) android.stringValue = appId;
         else Debug.LogWarning("[CoinForge] adMobAndroidAppId field not found - set App ID in Assets > Google Mobile Ads > Settings.");
         so.ApplyModifiedPropertiesWithoutUndo();
         EditorUtility.SetDirty(inst);
@@ -123,24 +160,148 @@ public static class CoinForgeSetup
     // CLI: Unity -batchmode -quit -executeMethod CoinForgeSetup.BuildReleaseApk
     public static void BuildReleaseApk() => Build("Builds/CoinForge-release.apk", BuildOptions.None, AndroidBuildType.Release);
 
-    static void Build(string path, BuildOptions options, AndroidBuildType type)
+    // IC-06: Play Store release. AAB, IL2CPP arm64, R8, production AdMob IDs, release keystore.
+    // Signing comes from environment variables only; passwords are never written to the project:
+    //   CF_KEYSTORE_PATH, CF_KEY_ALIAS, CF_KEYSTORE_PASS, CF_KEY_PASS
+    // CLI: Unity -batchmode -quit -executeMethod CoinForgeSetup.BuildReleaseAab
+    public static void BuildReleaseAab()
+    {
+        var config = EnsureAdConfig();
+        var problems = config.Production.ReleaseProblems();
+        if (problems.Count > 0)
+            Fail("Production AdMob IDs in " + AdConfigPath + " are not ready:\n  " + string.Join("\n  ", problems));
+        string keystore = Env("CF_KEYSTORE_PATH"), alias = Env("CF_KEY_ALIAS");
+        string storePass = Env("CF_KEYSTORE_PASS"), keyPass = Env("CF_KEY_PASS");
+        if (keystore == null || alias == null || storePass == null || keyPass == null)
+            Fail("Set CF_KEYSTORE_PATH, CF_KEY_ALIAS, CF_KEYSTORE_PASS and CF_KEY_PASS for the release keystore.");
+        if (!File.Exists(keystore)) Fail("Keystore not found: " + keystore);
+
+        PlayerSettings.Android.useCustomKeystore = true;
+        PlayerSettings.Android.keystoreName = Path.GetFullPath(keystore);
+        PlayerSettings.Android.keyaliasName = alias;
+        PlayerSettings.Android.keystorePass = storePass;
+        PlayerSettings.Android.keyaliasPass = keyPass;
+        try
+        {
+            Build($"Builds/CoinForge-{VersionName}-{VersionCode}.aab", BuildOptions.None, AndroidBuildType.Release,
+                  appBundle: true, appId: config.Production.AppId);
+        }
+        finally
+        {
+            // Leave no signing data in ProjectSettings.asset (passwords are never serialized; path/alias would be).
+            PlayerSettings.Android.useCustomKeystore = false;
+            PlayerSettings.Android.keystoreName = "";
+            PlayerSettings.Android.keyaliasName = "";
+            PlayerSettings.Android.keystorePass = "";
+            PlayerSettings.Android.keyaliasPass = "";
+            AssetDatabase.SaveAssets();
+            ScrubGradlePasswords();
+        }
+    }
+
+    // Unity writes the signing passwords in plain text into the generated Gradle project (Library/, gitignored).
+    // Blank them after the build so they don't stay on disk.
+    static void ScrubGradlePasswords()
+    {
+        const string gradle = "Library/Bee/Android/Prj/IL2CPP/Gradle/launcher/build.gradle";
+        if (!File.Exists(gradle)) return;
+        var text = File.ReadAllText(gradle);
+        var scrubbed = System.Text.RegularExpressions.Regex.Replace(
+            text, @"(?m)^(\s*(?:storePassword|keyPassword))\s+.*$", "$1 ''");
+        if (scrubbed != text) File.WriteAllText(gradle, scrubbed);
+    }
+
+    // IC-06 dry run: the release AAB pipeline (release config, R8, AAB) with Google test IDs and the debug keystore,
+    // to test minify and the bundle on a device before the production IDs/keystore exist. Not for upload.
+    // CLI: Unity -batchmode -quit -executeMethod CoinForgeSetup.BuildReleaseAabDryRun
+    public static void BuildReleaseAabDryRun()
+    {
+        var config = EnsureAdConfig();
+        string[] saved = { config.appId, config.rewardedId, config.interstitialId, config.bannerId };
+        SetProductionIds(AdIds.Test.AppId, AdIds.Test.Rewarded, AdIds.Test.Interstitial, AdIds.Test.Banner);
+        try
+        {
+            Build("Builds/CoinForge-dryrun.aab", BuildOptions.None, AndroidBuildType.Release,
+                  appBundle: true, appId: AdIds.Test.AppId);
+        }
+        finally
+        {
+            SetProductionIds(saved[0], saved[1], saved[2], saved[3]);
+        }
+    }
+
+    // IC-06 Play Store screenshots: release configuration (no "Development Build" mark), test IDs, no banner,
+    // preset saves via -storeshot N (Assets/Scripts/StoreShots.cs). Not for upload.
+    // CLI: Unity -batchmode -quit -executeMethod CoinForgeSetup.BuildStoreShotsApk
+    public static void BuildStoreShotsApk()
+    {
+        var config = EnsureAdConfig();
+        string[] saved = { config.appId, config.rewardedId, config.interstitialId, config.bannerId };
+        SetProductionIds(AdIds.Test.AppId, AdIds.Test.Rewarded, AdIds.Test.Interstitial, AdIds.Test.Banner);
+        try
+        {
+            Build("Builds/CoinForge-storeshots.apk", BuildOptions.None, AndroidBuildType.Release,
+                  appId: AdIds.Test.AppId, defines: new[] { "CF_STORE_SHOTS" });
+        }
+        finally
+        {
+            SetProductionIds(saved[0], saved[1], saved[2], saved[3]);
+        }
+    }
+
+    static void SetProductionIds(string app, string rewarded, string interstitial, string banner)
+    {
+        var config = EnsureAdConfig();   // load by path: a build unloads earlier references
+        config.appId = app; config.rewardedId = rewarded; config.interstitialId = interstitial; config.bannerId = banner;
+        EditorUtility.SetDirty(config);
+        AssetDatabase.SaveAssets();
+    }
+
+    static string Env(string name)
+    {
+        var v = System.Environment.GetEnvironmentVariable(name);
+        return string.IsNullOrEmpty(v) ? null : v;
+    }
+
+    static void Fail(string message)
+    {
+        Debug.LogError("[CoinForge] " + message);
+        throw new BuildFailedException(message);
+    }
+
+    static void Build(string path, BuildOptions options, AndroidBuildType type,
+                      bool appBundle = false, string appId = AdMobTestAppId, string[] defines = null)
     {
         // IC-04: don't regenerate Main.unity on every build (it churned fileIDs); create it only if missing.
         ApplyPlayerSettings();
         if (!File.Exists(ScenePath)) CreateMainScene();
-        ApplyAdMobAppId();
+        EnsureAdConfig();
+        ApplyAdMobAppId(appId);
         EditorUserBuildSettings.androidBuildType = type;
+        EditorUserBuildSettings.buildAppBundle = appBundle;
         ResolveAndroidDeps();
         Directory.CreateDirectory("Builds");
-        var rep = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+        bool ok;
+        try
         {
-            scenes = new[] { ScenePath },
-            locationPathName = path,
-            target = BuildTarget.Android,
-            options = options
-        });
-        if (rep.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded)
-            EditorApplication.Exit(1);
+            var rep = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+            {
+                scenes = new[] { ScenePath },
+                locationPathName = path,
+                target = BuildTarget.Android,
+                options = options,
+                extraScriptingDefines = defines
+            });
+            Debug.Log($"[CoinForge] Build {path}: {rep.summary.result}");
+            ok = rep.summary.result == UnityEditor.Build.Reporting.BuildResult.Succeeded;
+        }
+        finally
+        {
+            // The committed plugin settings always hold the test App ID (restored even when the build fails).
+            ApplyAdMobAppId(AdMobTestAppId);
+            EditorUserBuildSettings.buildAppBundle = false;
+        }
+        if (!ok) throw new BuildFailedException("Build failed: " + path);   // callers' finally blocks still run
     }
 }
 #endif

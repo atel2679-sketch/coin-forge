@@ -14,10 +14,9 @@ public class AdManager : MonoBehaviour
 {
     public static AdManager I { get; private set; }
 
-    [Header("Ad Unit IDs (Google TEST IDs by default — replace before release)")]
-    public string rewardedId     = "ca-app-pub-3940256099942544/5224354917";
-    public string interstitialId = "ca-app-pub-3940256099942544/1033173712";
-    public string bannerId       = "ca-app-pub-3940256099942544/9214589741";
+    // IC-06: IDs come from Resources/AdConfig.asset (test IDs in Editor/Development Builds, production in release).
+    AdConfig config;
+    AdIds ids;
 
     [Header("Interstitial pacing (seconds)")]
     public float interstitialCooldown = 300;  // mandatory 5 min
@@ -73,6 +72,8 @@ public class AdManager : MonoBehaviour
         I = this;
         mainThread = System.Threading.SynchronizationContext.Current;
         DontDestroyOnLoad(gameObject);
+        config = AdConfig.Load();
+        ids = config.Active;
         _ = Pacing;   // session clock starts at launch, not at first ad
     }
 
@@ -121,10 +122,7 @@ public class AdManager : MonoBehaviour
             return;
         }
         consentInFlight = true;
-        var request = new ConsentRequestParameters();
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-        request.ConsentDebugSettings = DebugConsentSettings();
-#endif
+        var request = new ConsentRequestParameters { ConsentDebugSettings = ConsentTestSettings() };
         ConsentInformation.Update(request, updateError => OnMain(() =>
         {
             if (updateError != null)
@@ -172,23 +170,28 @@ public class AdManager : MonoBehaviour
         }));
     }
 
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-    // ---------- IC-04 consent testing (dev builds only) ----------
-    public const string DebugEeaKey = "dbg_ump_eea";
-    // Redmi Note 7 test device (hash printed by the SDK in logcat). Add more devices here.
-    static readonly System.Collections.Generic.List<string> TestDeviceHashes =
-        new System.Collections.Generic.List<string> { "3EEB92147C2A16BE07C8D9854A3AB576" };
+    // IC-06: registered test devices (AdConfig) may force the EEA consent flow in any build, so the release AAB's
+    // consent form can be tested outside Europe. UMP ignores these settings on every device not in the list.
+    // Release: launch with  am start ... -e unity "-ump-eea".  Dev builds: also the debug panel toggle.
+    const string EeaLaunchArg = "-ump-eea";
 
-    static ConsentDebugSettings DebugConsentSettings()
+    ConsentDebugSettings ConsentTestSettings()
     {
-        bool eea = PlayerPrefs.GetInt(DebugEeaKey, 0) == 1;
-        Debug.Log("[Consent] Debug geography: " + (eea ? "EEA" : "device default"));
+        bool eea = Array.IndexOf(Environment.GetCommandLineArgs(), EeaLaunchArg) >= 0;
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        eea |= PlayerPrefs.GetInt(DebugEeaKey, 0) == 1;
+#endif
+        Debug.Log("[Consent] Test geography: " + (eea ? "EEA" : "device default"));
         return new ConsentDebugSettings
         {
             DebugGeography = eea ? DebugGeography.EEA : DebugGeography.Disabled,
-            TestDeviceHashedIds = TestDeviceHashes
+            TestDeviceHashedIds = config.testDeviceIds
         };
     }
+
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+    // ---------- IC-04 consent testing (dev builds only) ----------
+    public const string DebugEeaKey = "dbg_ump_eea";
 
     public static void DebugResetConsent()
     {
@@ -203,13 +206,17 @@ public class AdManager : MonoBehaviour
         if (initStarted) return;
         initStarted = true;
         CancelInvoke(nameof(RequestConsent));
-        Debug.Log("[Ads] MobileAds.Initialize (consent allows ads)");
+        Debug.Log("[Ads] MobileAds.Initialize (consent allows ads), test IDs: " + AdConfig.UsesTestIds);
+        // IC-06: test devices get test ads even from production units (no invalid clicks on our own ads).
+        MobileAds.SetRequestConfiguration(new RequestConfiguration { TestDeviceIds = config.testDeviceIds });
         // Plugin v11: every SDK callback may arrive on a background thread -> marshal with OnMain().
         MobileAds.Initialize(_ => OnMain(() =>
         {
             LoadRewarded();
+#if !CF_STORE_SHOTS   // IC-06 store-screenshot build: no banner, no interstitial on screen
             LoadInterstitial();
             ShowBanner();
+#endif
         }));
     }
 
@@ -231,7 +238,7 @@ public class AdManager : MonoBehaviour
         rewarded = null;
         GameEvents.RaiseRewardedReady(false);
 
-        RewardedAd.Load(rewardedId, new AdRequest(), (ad, err) => OnMain(() =>
+        RewardedAd.Load(ids.Rewarded, new AdRequest(), (ad, err) => OnMain(() =>
         {
             if (err != null || ad == null)
             {
@@ -278,7 +285,7 @@ public class AdManager : MonoBehaviour
     {
         interstitial?.Destroy();
         interstitial = null;
-        InterstitialAd.Load(interstitialId, new AdRequest(), (ad, err) => OnMain(() =>
+        InterstitialAd.Load(ids.Interstitial, new AdRequest(), (ad, err) => OnMain(() =>
         {
             if (err != null || ad == null) { Invoke(nameof(LoadInterstitial), 60f); return; }
             interstitial = ad;
@@ -301,7 +308,7 @@ public class AdManager : MonoBehaviour
     {
         banner?.Destroy();
         AdSize size = AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(AdSize.FullWidth);
-        banner = new BannerView(bannerId, size, AdPosition.Bottom);
+        banner = new BannerView(ids.Banner, size, AdPosition.Bottom);
         bannerHeightPx = 0;
         banner.OnBannerAdLoaded += () => OnMain(() =>
         {
