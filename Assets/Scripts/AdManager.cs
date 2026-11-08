@@ -164,6 +164,7 @@ public class AdManager : MonoBehaviour
     void OnPresentationChanged()
     {
         TryShowPendingConsent();
+        TryStartLoading();
         if (CoinForgePresentation.AdsBlocked) HideBanner();
         else RestoreBanner();
     }
@@ -235,12 +236,24 @@ public class AdManager : MonoBehaviour
         // Plugin v11: every SDK callback may arrive on a background thread -> marshal with OnMain().
         MobileAds.Initialize(_ => OnMain(() =>
         {
-            LoadRewarded();
-#if !CF_STORE_SHOTS   // IC-06 store-screenshot build: no banner, no interstitial on screen
-            LoadInterstitial();
-            ShowBanner();
-#endif
+            sdkReady = true;
+            TryStartLoading();
         }));
+    }
+
+    // IC-06b review of IC-08: with stored consent, Init() runs during the intro. The SDK may initialize then, but no
+    // ad (not even a hidden banner) is requested until the intro/startup/tutorial gates are released.
+    bool sdkReady, loadingStarted;
+
+    void TryStartLoading()
+    {
+        if (!sdkReady || loadingStarted || CoinForgePresentation.AdsBlocked) return;
+        loadingStarted = true;
+        LoadRewarded();
+#if !CF_STORE_SHOTS   // IC-06 store-screenshot build: no banner, no interstitial on screen
+        LoadInterstitial();
+        ShowBanner();
+#endif
     }
 
     // SDK callbacks may arrive on background threads. Marshal them to Unity's main thread through the

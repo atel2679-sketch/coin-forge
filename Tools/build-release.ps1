@@ -22,4 +22,4 @@ finally {
     [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
     Remove-Item Env:CF_KEYSTORE_PASS, Env:CF_KEY_PASS, Env:CF_KEYSTORE_PATH, Env:CF_KEY_ALIAS -ErrorAction SilentlyContinue
 }
-Get-Item "$project\Builds\CoinForge-1.0.0-1.aab" -ErrorAction SilentlyContinue | Select-Object Name, Length, LastWriteTime
+Get-ChildItem "$project\Builds\CoinForge-*-*.aab" | Sort-Object LastWriteTime | Select-Object -Last 1 Name, Length, LastWriteTime

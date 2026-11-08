@@ -102,3 +102,30 @@ The first version of `make-release-keystore.ps1` ended with `keytool -list ... |
 2. **Consent load timeout:** the first load of the production form timed out once on Wi-Fi. The retry (60 s, and on resume) recovered. No change made.
 3. **Privacy policy URL and target audience:** still needed for the Play Console (see the Data safety draft).
 4. **Keystore backup:** `F:\Keystores\coinforge-release.keystore` and its password must be backed up outside this PC. Turn on Play App Signing when uploading; this key then acts as the upload key.
+
+## IC-06b · v1.0.1 (versionCode 2): splash, startup and app icon
+
+`Builds/CoinForge-1.0.1-2.aab` is 36,801,374 bytes. It's signed with the same upload key, the release check passes, and it includes IC-08 (`e0a735e`). Tests: 63/63.
+
+- **Unity splash:** off. No "Made with Unity" screen and no Unity logo.
+- **Startup screen:** `icon_foreground_safe` at 160 dp on #1E1A16.
+  - It's in the Android window background (`CoinForgeAndroidTheme`, a Gradle post-processor) and in Unity's static loading image (`Assets/Startup/coinforge_static_splash.png`).
+  - On the Redmi the icon's coin centre lands at (471, 1136) px, exactly where the IC-08 intro coin appears.
+  - The Android 12+ system splash background is #1E1A16 (not testable on the Redmi, which runs Android 10).
+- **App icon:**
+  - Adaptive: `icon_background` + `icon_foreground_safe`. The content is scaled to radius ≤ 0.30 so it stays inside the 66 dp safe zone ([mask simulation](icon-adaptive-mask-sim.png)).
+  - Round and legacy: `app_icon_512.png`, now exactly 512×512 RGB at 340 KB. The 1254 px master is `app_icon_master.png`.
+- **IC-08 review fix (`AdManager`):** with stored consent, `MobileAds.Initialize` may run during the intro, but no ad is requested until the intro, startup and tutorial gates are released. Measured: intro ends at +4.0 s, first ad request at +5.25 s.
+
+**Redmi cold start** (dry run, same code, test IDs): [frames](ic06b-startup-icon-frames.png)
+
+| Phase | Time |
+|---|---|
+| MIUI open animation (one black frame, same in MIUI Settings, so not the app) | about +0.6 s |
+| Startup icon | +1.3 s |
+| Intro | +4.9 s |
+| Game | about +5.7 s |
+
+Launcher: [home screen](ic06b-launcher-home.png) · [icon close-up](ic06b-launcher-icon-zoom.png). The second "CoinForge" with a Unity logo is the old QA app `com.publicvoid.coinforge.ic02qa`.
+
+**Open:** the production consent form timed out on the first launch after install twice in a row ("Web view timed out"). The 60 s retry shows it after the tutorial.

@@ -1,5 +1,22 @@
 # Changelog — Coin Forge
 
+## v1.0.1 (versionCode 2) — 2026-11-08 — Startup, intro and app icon
+### Startup
+- Removed the Unity splash screen ("Made with Unity" and the Unity logo).
+- Start-up screen: coin/hammer icon (160dp) on the game colour #1E1A16 — in the Android window background and
+  Unity's static loading image — placed where the intro coin appears, so launcher → loading → intro is one
+  continuous scene with no white/black flash from the app. Android 12+ system splash background is #1E1A16 too.
+- IC-08 intro: animated forge intro (full 2.3 s on first launch, short 1.2 s on return, tap to skip),
+  then consent, then the tutorial.
+
+### Ads
+- No ad is requested or shown while the intro, the startup dialogs or the tutorial are on screen; the consent form
+  waits until the intro has finished. Consent still comes before MobileAds.Initialize.
+
+### App icon
+- New adaptive icon (forge background + coin/hammer foreground scaled into the 66dp safe zone), plus round and
+  legacy icons from app_icon_512 (512×512). No Unity logo in the launcher.
+
 ## v1.0.0 (versionCode 1) — 2026-11-08 — Initial release (Internal testing)
 Engine: Unity 6000.3.27f1 · Google Mobile Ads 11.6.0 · Min API 25 · Target API 36 · IL2CPP arm64
 Package: com.publicvoid.coinforge · Commit: b0880cf
